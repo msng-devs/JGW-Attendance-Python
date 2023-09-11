@@ -1,3 +1,5 @@
+import logging
+
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 
@@ -8,6 +10,8 @@ from rest_framework.response import Response
 from .models import Event
 from .serializers import EventSerializer
 from apps.utils.permissions import get_auth_header, check_permission
+
+logger = logging.getLogger("django")
 
 
 class AddEvent(APIView):

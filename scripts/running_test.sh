@@ -1,0 +1,1 @@
+python manage.py test --settings=jgw_attendance.settings.settings_dev

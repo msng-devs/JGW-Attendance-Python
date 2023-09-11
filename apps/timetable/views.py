@@ -1,3 +1,5 @@
+import logging
+
 import string
 import random
 import datetime
@@ -18,6 +20,8 @@ from apps.attendance.serializers import (
 )
 from apps.utils.attendancecode import AttendanceCodeService
 from apps.utils.permissions import get_auth_header, check_permission
+
+logger = logging.getLogger("django")
 
 
 class AddTimeTable(APIView):

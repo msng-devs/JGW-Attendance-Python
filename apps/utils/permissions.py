@@ -1,7 +1,8 @@
 from django.utils.six import text_type
-from django.core.exceptions import PermissionDenied
+# from django.core.exceptions import PermissionDenied
 
 from rest_framework import HTTP_HEADER_ENCODING
+from rest_framework.exceptions import PermissionDenied
 
 from apps.common.models import Role
 

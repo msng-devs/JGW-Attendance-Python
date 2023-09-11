@@ -1,3 +1,5 @@
+import logging
+
 from django.shortcuts import get_object_or_404
 
 from rest_framework import status
@@ -8,6 +10,8 @@ from rest_framework.pagination import PageNumberPagination
 from .models import AttendanceType, Attendance
 from .serializers import AttendanceSerializer, AttendanceTypeSerializer
 from apps.utils.permissions import get_auth_header, check_permission
+
+logger = logging.getLogger("django")
 
 
 class CustomPagination(PageNumberPagination):

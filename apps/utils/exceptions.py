@@ -6,6 +6,11 @@ from rest_framework.exceptions import (
     ValidationError,
     PermissionDenied,
     NotAuthenticated,
+    NotFound,
+    MethodNotAllowed,
+    NotAcceptable,
+    UnsupportedMediaType,
+    Throttled,
 )
 import datetime
 
@@ -49,6 +54,17 @@ def _check_error_code(exc):
             error_code = "AT-DB-005"
         case BrokenPipeError():
             error_code = "AT-DB-006"
+        # HTTP ERRORS
+        case NotFound():
+            error_code = "AT-HTTP-001"
+        case MethodNotAllowed():
+            error_code = "AT-HTTP-002"
+        case NotAcceptable():
+            error_code = "AT-HTTP-003"
+        case UnsupportedMediaType():
+            error_code = "AT-HTTP-004"
+        case Throttled():
+            error_code = "AT-HTTP-005"
         case _:
             error_code = "AT-GEN-000"  # General error code as default
 

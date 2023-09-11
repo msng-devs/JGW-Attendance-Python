@@ -1,3 +1,5 @@
+import logging
+
 import json
 
 from django.urls import reverse
@@ -16,6 +18,9 @@ from apps.utils.test_utils import TestUtils
 class AttendanceApiTest(TestCase):
     @classmethod
     def setUpTestData(cls):
+        # 테스트케이스 단계에서 로그가 쌓이는지 확인하기 위해 로깅 레벨을 설정
+        logging.disable(logging.NOTSET)
+
         cls.roles = [
             Role.objects.create(id=1, name='ROLE_GUEST'),
             Role.objects.create(id=2, name='ROLE_USER0'),
@@ -308,6 +313,7 @@ class AttendanceApiTest(TestCase):
         )
 
         # then
+        print(response.json())
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_attendances_not_admin(self):
@@ -426,3 +432,9 @@ class AttendanceApiTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIsNotNone(response.json())
         self.assertEqual(len(response.json()), 2)
+
+    @classmethod
+    def tearDownClass(cls):
+        # 로그 레벨을 다시 원래대로 돌려놓음
+        logging.disable(logging.CRITICAL)
+        super().tearDownClass()

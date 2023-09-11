@@ -1,3 +1,5 @@
+import logging
+
 import json
 
 from django.urls import reverse
@@ -15,6 +17,9 @@ from apps.attendance.models import AttendanceType
 class EventApiTest(TestCase):
     @classmethod
     def setUpTestData(cls):
+        # 테스트케이스 단계에서 로그가 쌓이는지 확인하기 위해 로깅 레벨을 설정
+        logging.disable(logging.NOTSET)
+
         cls.roles = [
             Role.objects.create(id=1, name='ROLE_GUEST'),
             Role.objects.create(id=2, name='ROLE_USER0'),
@@ -201,3 +206,9 @@ class EventApiTest(TestCase):
         }
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         TestUtils.verify_response_data(response, expected_data)
+
+    @classmethod
+    def tearDownClass(cls):
+        # 로그 레벨을 다시 원래대로 돌려놓음
+        logging.disable(logging.CRITICAL)
+        super().tearDownClass()
