@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.exceptions import NotFound
 
 from .models import TimeTable
 from .serializers import TimeTableSerializer
@@ -194,9 +195,7 @@ class AttendanceCodeDetail(APIView):
         attendance_code = AttendanceCodeService.get_code_by_time_table(time_table.id)
 
         if not attendance_code:
-            return Response(
-                {"error": "Code not found"}, status=status.HTTP_404_NOT_FOUND
-            )
+            raise NotFound("Code not found")
 
         serializer = AttendanceCodeSerializer(attendance_code)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -249,9 +248,7 @@ class AttendanceCodeDetail(APIView):
         attendance_code = AttendanceCodeService.get_code_by_time_table(time_table.id)
 
         if not attendance_code:
-            return Response(
-                {"error": "Code not found"}, status=status.HTTP_404_NOT_FOUND
-            )
+            raise NotFound("Code not found")
 
         # AttendanceCode 객체 삭제
         attendance_code.delete()

@@ -5,11 +5,14 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.pagination import PageNumberPagination
 
 from .models import AttendanceType, Attendance
 from .serializers import AttendanceSerializer, AttendanceTypeSerializer
+from apps.common.models import Member
 from apps.utils.permissions import get_auth_header, check_permission
+from apps.utils.scheduler import send_mail
 
 logger = logging.getLogger("django")
 
@@ -37,6 +40,18 @@ class AddAttendance(APIView):
 
         if serializer.is_valid():
             serializer.save()
+
+            # 메일 발송
+            target_member = Member.objects.filter(id=uid)
+            to_email = target_member.values_list("email", flat=True)[0]
+            to_username = target_member.values_list("name", flat=True)[0]
+            send_mail(
+                to=to_email,
+                subject="New Attendance Added",
+                template="attendance_template",
+                args={"username": to_username},
+                service_name="AttendanceService"
+            )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -61,9 +76,7 @@ class AttendanceList(APIView):
         # 권한 체크
         member_id_param = query_params.get("memberID")
         if member_id_param and member_id_param != uid and role_id < 4:
-            return Response(
-                {"detail": "FORBIDDEN_ROLE"}, status=status.HTTP_403_FORBIDDEN
-            )
+            raise PermissionDenied("해당 정보를 열람할 권한이 없습니다.")
 
         # 쿼리 필터 작성
         filters = {}
@@ -119,9 +132,7 @@ class AttendanceDetail(APIView):
         # 권한 체크
         member_id_param = query_params.get("memberID")
         if member_id_param and member_id_param != uid and role_id < 4:
-            return Response(
-                {"detail": "FORBIDDEN_ROLE"}, status=status.HTTP_403_FORBIDDEN
-            )
+            raise PermissionDenied("해당 정보를 열람할 권한이 없습니다.")
 
         attendance = get_object_or_404(Attendance, id=attendanceId)
 

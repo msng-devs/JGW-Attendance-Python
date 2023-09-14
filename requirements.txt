@@ -20,9 +20,11 @@ pylint-django==2.5.3
 pylint-plugin-utils==0.8.2
 python-dotenv==1.0.0
 pytz==2023.3
+pyzmq==25.1.1
 six==1.16.0
 sqlparse==0.4.4
 tomli==2.0.1
 tomlkit==0.12.1
 typing_extensions==4.7.1
 wrapt==1.15.0
+zmq==0.0.0

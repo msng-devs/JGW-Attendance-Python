@@ -22,11 +22,11 @@ class TimeTableApiTest(TestCase):
         logging.disable(logging.NOTSET)
 
         cls.roles = [
-            Role.objects.create(id=1, name='ROLE_GUEST'),
-            Role.objects.create(id=2, name='ROLE_USER0'),
-            Role.objects.create(id=3, name='ROLE_USER1'),
-            Role.objects.create(id=4, name='ROLE_ADMIN'),
-            Role.objects.create(id=5, name='ROLE_DEV'),
+            Role.objects.create(id=1, name="ROLE_GUEST"),
+            Role.objects.create(id=2, name="ROLE_USER0"),
+            Role.objects.create(id=3, name="ROLE_USER1"),
+            Role.objects.create(id=4, name="ROLE_ADMIN"),
+            Role.objects.create(id=5, name="ROLE_DEV"),
         ]
 
         cls.members = [
