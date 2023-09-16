@@ -19,7 +19,9 @@ from apps.attendance.serializers import (
     AttendanceCodeSerializer,
     AttendanceCodeAddRequestSerializer,
 )
+from apps.common.models import Member
 from apps.utils.attendancecode import AttendanceCodeService
+from apps.utils.scheduler import send_mail
 from apps.utils.permissions import get_auth_header, check_permission
 
 logger = logging.getLogger("django")
@@ -79,6 +81,21 @@ class RegisterAttendanceCode(APIView):
         attendance_serializer = AttendanceSerializer(data=data)
         if attendance_serializer.is_valid():
             attendance_serializer.save()
+
+            # 메일 발송
+            target_member = Member.objects.filter(id=uid)
+            to_email = target_member.values_list("email", flat=True)[0]
+            to_username = target_member.values_list("name", flat=True)[0]
+            send_mail(
+                to=to_email,
+                subject="출결 코드를 통해 출결 정보가 처리되었습니다.",
+                template="plain_text",
+                args={
+                    "content": "출결 코드를 통해 출결 정보가 처리되었습니다. 자세한 내용은 자람 그룹웨어를 확인해주세요.",
+                    "subject": "출결 코드를 통해 출결 정보가 처리되었습니다",
+                },
+                service_name="TimeTableService",
+            )
             return Response(attendance_serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(

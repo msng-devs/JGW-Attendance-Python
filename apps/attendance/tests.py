@@ -21,6 +21,8 @@ class AttendanceSchedulerTest(TestCase):
         # 테스트케이스 단계에서 로그가 쌓이는지 확인하기 위해 로깅 레벨을 설정
         logging.disable(logging.NOTSET)
 
+        cls.pull_socket = TestUtils.make_test_pull_socket(host="127.0.0.1", port=5555)
+
         cls.roles = [
             Role.objects.create(id=1, name="ROLE_GUEST"),
             Role.objects.create(id=2, name="ROLE_USER0"),
@@ -101,6 +103,7 @@ class AttendanceSchedulerTest(TestCase):
         # self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         # TestUtils.verify_response_data(response, expected_data)
         print(response.json())
+        TestUtils.send_mail(self.pull_socket)
 
     def tearDown(self):
         pass

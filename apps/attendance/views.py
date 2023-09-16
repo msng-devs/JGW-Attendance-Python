@@ -44,13 +44,15 @@ class AddAttendance(APIView):
             # 메일 발송
             target_member = Member.objects.filter(id=uid)
             to_email = target_member.values_list("email", flat=True)[0]
-            to_username = target_member.values_list("name", flat=True)[0]
             send_mail(
                 to=to_email,
-                subject="New Attendance Added",
-                template="attendance_template",
-                args={"username": to_username},
-                service_name="AttendanceService"
+                subject="[자람 그룹웨어] 새로운 출석 정보가 등록되었습니다.",
+                template="plain_text",
+                args={
+                    "content": "새로운 출석 정보가 등록되었습니다. 자세한 내용은 자람 그룹웨어를 확인해주세요.",
+                    "subject": "새로운 출석 정보가 등록되었습니다",
+                },
+                service_name="AttendanceService",
             )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
