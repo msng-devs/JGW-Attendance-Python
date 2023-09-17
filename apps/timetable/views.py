@@ -28,6 +28,16 @@ logger = logging.getLogger("django")
 
 
 class AddTimeTable(APIView):
+    """
+    신규 TimeTable 추가
+
+    ---
+    RBAC - 4(어드민)
+
+    해당 API를 통해 신규 TimeTable을 추가할 수 있습니다.
+
+    * @author 이준혁(39기) bbbong9@gmail.com
+    """
     def post(self, request):
         uid, role_id = get_auth_header(request)
 
@@ -48,6 +58,16 @@ class AddTimeTable(APIView):
 
 
 class RegisterAttendanceCode(APIView):
+    """
+    AttendanceCode로 출결 등록
+
+    ---
+    RBAC - 2(수습 회원)
+
+    해당 API를 통해 Attendance Code로 출결을 등록할 수 있습니다.
+
+    * @author 이준혁(39기) bbbong9@gmail.com
+    """
     register_attendance_type = 1
 
     def post(self, request, timetableId):
@@ -104,6 +124,16 @@ class RegisterAttendanceCode(APIView):
 
 
 class TimeTableList(APIView):
+    """
+    다수 TimeTable 조회
+
+    ---
+    Auth - 인증 필요 (문서 설명 수정 예정)
+
+    여러 time table들을 조회, 페이징, 정렬, 필터링을 통해 조회할 수 있습니다.
+
+    * @author 이준혁(39기) bbbong9@gmail.com
+    """
     def get(self, request):
         uid, role_id = get_auth_header(request)
         query_params = request.query_params
@@ -166,6 +196,14 @@ class TimeTableList(APIView):
 
 
 class TimeTableDetail(APIView):
+    """
+    TimeTable API
+
+    ---
+    TimeTable을 추가하고, 삭제하고, 수정하는 API를 제공합니다.
+
+    * @author 이준혁(39기) bbbong9@gmail.com
+    """
     def get(self, request, timetableId):
         uid, role_id = get_auth_header(request)
 
@@ -205,6 +243,14 @@ class TimeTableDetail(APIView):
 
 
 class AttendanceCodeDetail(APIView):
+    """
+    AttendanceCode API
+
+    ---
+    출결 코드를 추가하고, 삭제하고, 사용하는 API를 제공합니다.
+
+    * @author 이준혁(39기) bbbong9@gmail.com
+    """
     def get(self, request, timetableId):
         uid, role_id = get_auth_header(request)
 

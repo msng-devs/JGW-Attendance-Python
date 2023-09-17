@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "apps.attendance",
     "apps.timetable",
     "rest_framework",
+    "drf_yasg",
 ]
 
 MIDDLEWARE = [

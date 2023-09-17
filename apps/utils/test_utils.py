@@ -50,9 +50,7 @@ class TestUtils:
         received_message = json.loads(received_message)
         to_email = received_message["to"]
         subject = received_message["subject"]
-        message = received_message.get(
-            "template", ""
-        )
+        message = received_message.get("template", "")
 
         email = EmailMessage(
             subject,  # 이메일 제목
