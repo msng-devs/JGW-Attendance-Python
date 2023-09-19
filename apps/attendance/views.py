@@ -1,6 +1,7 @@
 import logging
 
 from django.shortcuts import get_object_or_404
+from django.conf import settings
 
 from rest_framework import status
 from rest_framework.views import APIView
@@ -52,19 +53,20 @@ class AddAttendance(APIView):
         if serializer.is_valid():
             serializer.save()
 
-            # 메일 발송
-            target_member = Member.objects.filter(id=uid)
-            to_email = target_member.values_list("email", flat=True)[0]
-            send_mail(
-                to=to_email,
-                subject="[자람 그룹웨어] 새로운 출석 정보가 등록되었습니다.",
-                template="plain_text",
-                args={
-                    "content": "새로운 출석 정보가 등록되었습니다. 자세한 내용은 자람 그룹웨어를 확인해주세요.",
-                    "subject": "새로운 출석 정보가 등록되었습니다",
-                },
-                service_name="AttendanceService",
-            )
+            if not getattr(settings, "TESTING_MODE", False):
+                # 메일 발송
+                target_member = Member.objects.filter(id=uid)
+                to_email = target_member.values_list("email", flat=True)[0]
+                send_mail(
+                    to=to_email,
+                    subject="[자람 그룹웨어] 새로운 출석 정보가 등록되었습니다.",
+                    template="plain_text",
+                    args={
+                        "content": "새로운 출석 정보가 등록되었습니다. 자세한 내용은 자람 그룹웨어를 확인해주세요.",
+                        "subject": "새로운 출석 정보가 등록되었습니다",
+                    },
+                    service_name="AttendanceService",
+                )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -78,6 +80,7 @@ class GetAttendanceType(APIView):
 
     * @author 이준혁(39기) bbbong9@gmail.com
     """
+
     def get(self, request):
         # Allow all
         uid, role_id = get_auth_header(request)
@@ -113,6 +116,7 @@ class AttendanceList(APIView):
 
     * @author 이준혁(39기) bbbong9@gmail.com
     """
+
     def get(self, request):
         # TODO: query param 없을 때 분기 처리
         uid, role_id = get_auth_header(request)

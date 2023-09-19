@@ -25,6 +25,7 @@ class AddEvent(APIView):
 
     * @author 이준혁(39기) bbbong9@gmail.com
     """
+
     def post(self, request):
         uid, role_id = get_auth_header(request)
 
@@ -61,6 +62,7 @@ class EventList(APIView):
 
     * @author 이준혁(39기) bbbong9@gmail.com
     """
+
     def get(self, request):
         uid, role_id = get_auth_header(request)
         query_params = request.query_params
@@ -134,6 +136,7 @@ class EventDetail(APIView):
 
     * @author 이준혁(39기) bbbong9@gmail.com
     """
+
     def get(self, request, eventId):
         uid, role_id = get_auth_header(request)
 

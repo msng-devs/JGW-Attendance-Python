@@ -17,3 +17,5 @@
 
 # ZMQ_HOST = "your_host_here"
 # ZMQ_PORT = "your_port_here"
+
+TESTING_MODE = False

@@ -212,7 +212,7 @@ class TimeTableApiTest(TestCase):
         )
 
         # then
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(TimeTable.objects.filter(id=self.timetable_id).exists())
 
     def test_update_timetable(self):

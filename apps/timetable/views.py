@@ -5,9 +5,12 @@ import random
 import datetime
 
 from django.db.models import Q
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 
 from rest_framework import status
+from rest_framework import mixins
+from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
@@ -22,7 +25,11 @@ from apps.attendance.serializers import (
 from apps.common.models import Member
 from apps.utils.attendancecode import AttendanceCodeService
 from apps.utils.scheduler import send_mail
-from apps.utils.permissions import get_auth_header, check_permission
+from apps.utils.permissions import (
+    IsAdminOrSelf,
+    IsProbationaryMember,
+)
+from apps.utils.decorators import common_swagger_decorator
 
 logger = logging.getLogger("django")
 
@@ -38,17 +45,17 @@ class AddTimeTable(APIView):
 
     * @author 이준혁(39기) bbbong9@gmail.com
     """
-    def post(self, request):
-        uid, role_id = get_auth_header(request)
 
-        # RBAC - 4(임원진) 확인
-        check_permission(uid, role_id)
+    permission_classes = [IsAdminOrSelf]
+    serializer_class = TimeTableSerializer
 
+    @common_swagger_decorator
+    def post(self, request, *args, **kwargs):
         data_with_meta = request.data.copy()
-        data_with_meta["created_by"] = uid
-        data_with_meta["modified_by"] = uid
+        data_with_meta["created_by"] = request.uid
+        data_with_meta["modified_by"] = request.uid
 
-        serializer = TimeTableSerializer(data=data_with_meta)
+        serializer = self.serializer_class(data=data_with_meta)
 
         if serializer.is_valid():
             serializer.save()
@@ -66,12 +73,18 @@ class RegisterAttendanceCode(APIView):
 
     해당 API를 통해 Attendance Code로 출결을 등록할 수 있습니다.
 
+    ## Parameter 설명
+        - timetableId: 출결을 등록할 TimeTable의 ID
+
     * @author 이준혁(39기) bbbong9@gmail.com
     """
-    register_attendance_type = 1
 
+    register_attendance_type = 1
+    permission_classes = [IsProbationaryMember]
+    serializer_class = AttendanceSerializer
+
+    @common_swagger_decorator
     def post(self, request, timetableId):
-        uid, role_id = get_auth_header(request)
         time_table = get_object_or_404(TimeTable, id=timetableId)
 
         code = request.data.get("code")
@@ -94,28 +107,28 @@ class RegisterAttendanceCode(APIView):
             "created_by": "system",
             "modified_by": "system",
             "index": "출결 코드를 통해 처리된 출결 정보 입니다.",
-            "member_id": uid,
+            "member_id": request.uid,
             "time_table_id": timetableId,
         }
 
-        attendance_serializer = AttendanceSerializer(data=data)
+        attendance_serializer = self.serializer_class(data=data)
         if attendance_serializer.is_valid():
             attendance_serializer.save()
 
-            # 메일 발송
-            target_member = Member.objects.filter(id=uid)
-            to_email = target_member.values_list("email", flat=True)[0]
-            to_username = target_member.values_list("name", flat=True)[0]
-            send_mail(
-                to=to_email,
-                subject="출결 코드를 통해 출결 정보가 처리되었습니다.",
-                template="plain_text",
-                args={
-                    "content": "출결 코드를 통해 출결 정보가 처리되었습니다. 자세한 내용은 자람 그룹웨어를 확인해주세요.",
-                    "subject": "출결 코드를 통해 출결 정보가 처리되었습니다",
-                },
-                service_name="TimeTableService",
-            )
+            if not getattr(settings, "TESTING_MODE", False):
+                # 메일 발송
+                target_member = Member.objects.filter(id=request.uid)
+                to_email = target_member.values_list("email", flat=True)[0]
+                send_mail(
+                    to=to_email,
+                    subject="출결 코드를 통해 출결 정보가 처리되었습니다.",
+                    template="plain_text",
+                    args={
+                        "content": "출결 코드를 통해 출결 정보가 처리되었습니다. 자세한 내용은 자람 그룹웨어를 확인해주세요.",
+                        "subject": "출결 코드를 통해 출결 정보가 처리되었습니다",
+                    },
+                    service_name="TimeTableService",
+                )
             return Response(attendance_serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(
@@ -124,6 +137,7 @@ class RegisterAttendanceCode(APIView):
 
 
 class TimeTableList(APIView):
+    # TODO: Pagination 개선(전체적인 리펙토링)
     """
     다수 TimeTable 조회
 
@@ -134,8 +148,10 @@ class TimeTableList(APIView):
 
     * @author 이준혁(39기) bbbong9@gmail.com
     """
+
+    permission_classes = [IsAdminOrSelf]
+
     def get(self, request):
-        uid, role_id = get_auth_header(request)
         query_params = request.query_params
 
         if not request.query_params:
@@ -195,54 +211,43 @@ class TimeTableList(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class TimeTableDetail(APIView):
+class TimeTableDetail(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    generics.GenericAPIView,
+):
     """
     TimeTable API
 
     ---
-    TimeTable을 추가하고, 삭제하고, 수정하는 API를 제공합니다.
+    TimeTable을 조회하고, 삭제하고, 수정하는 API를 제공합니다.
 
     * @author 이준혁(39기) bbbong9@gmail.com
     """
-    def get(self, request, timetableId):
-        uid, role_id = get_auth_header(request)
 
-        time_table = get_object_or_404(TimeTable, id=timetableId)
+    queryset = TimeTable.objects.all()
+    serializer_class = TimeTableSerializer
+    permission_classes = [IsAdminOrSelf]
+    lookup_field = "id"
+    lookup_url_kwarg = "timetableId"
 
-        serializer = TimeTableSerializer(time_table)
+    @common_swagger_decorator
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    @common_swagger_decorator
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs, partial=True)
 
-    def delete(self, request, timetableId):
-        uid, role_id = get_auth_header(request)
-
-        # RBAC - 4(임원진) 확인
-        check_permission(uid, role_id)
-
-        time_table = get_object_or_404(TimeTable, id=timetableId)
-        time_table.delete()
-
-        return Response({"message": "Successfully deleted."}, status=status.HTTP_200_OK)
-
-    def put(self, request, timetableId):
-        uid, role_id = get_auth_header(request)
-
-        # RBAC - 4(임원진) 확인
-        check_permission(uid, role_id)
-
-        time_table = get_object_or_404(TimeTable, id=timetableId)
-
-        serializer = TimeTableSerializer(time_table, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save(modify_by=uid)
-
-            return Response(serializer.data, status=status.HTTP_200_OK)
-
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    @common_swagger_decorator
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
 
-class AttendanceCodeDetail(APIView):
+class AttendanceCodeDetail(
+    mixins.RetrieveModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView
+):
     """
     AttendanceCode API
 
@@ -251,8 +256,16 @@ class AttendanceCodeDetail(APIView):
 
     * @author 이준혁(39기) bbbong9@gmail.com
     """
-    def get(self, request, timetableId):
-        uid, role_id = get_auth_header(request)
+
+    queryset = TimeTable.objects.all()
+    serializer_class = AttendanceCodeSerializer
+    permission_classes = [IsAdminOrSelf]
+    lookup_field = "id"
+    lookup_url_kwarg = "timetableId"
+
+    @common_swagger_decorator
+    def get(self, request, *args, **kwargs):
+        timetableId = kwargs.get("timetableId")
 
         time_table = get_object_or_404(TimeTable, id=timetableId)
         attendance_code = AttendanceCodeService.get_code_by_time_table(time_table.id)
@@ -260,14 +273,12 @@ class AttendanceCodeDetail(APIView):
         if not attendance_code:
             raise NotFound("Code not found")
 
-        serializer = AttendanceCodeSerializer(attendance_code)
+        serializer = super().get_serializer(attendance_code)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def post(self, request, timetableId):
-        uid, role_id = get_auth_header(request)
-
-        # RBAC - 4(어드민) 확인
-        check_permission(uid, role_id)
+    @common_swagger_decorator
+    def post(self, request, *args, **kwargs):
+        timetableId = kwargs.get("timetableId")
 
         time_table = get_object_or_404(TimeTable, id=timetableId)
 
@@ -293,18 +304,16 @@ class AttendanceCodeDetail(APIView):
             "expire_at": expire_at,
         }
 
-        serializer = AttendanceCodeSerializer(data=serializer_data)
+        serializer = super().get_serializer(data=serializer_data)
         if serializer.is_valid():
             response_data = AttendanceCodeService.create_code(serializer)
             return Response(response_data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, timetableId):
-        uid, role_id = get_auth_header(request)
-
-        # RBAC - 4(어드민) 확인
-        check_permission(uid, role_id)
+    @common_swagger_decorator
+    def delete(self, request, *args, **kwargs):
+        timetableId = kwargs.get("timetableId")
 
         time_table = get_object_or_404(TimeTable, id=timetableId)
 
@@ -313,10 +322,4 @@ class AttendanceCodeDetail(APIView):
         if not attendance_code:
             raise NotFound("Code not found")
 
-        # AttendanceCode 객체 삭제
-        attendance_code.delete()
-
-        return Response(
-            {"message": "AttendanceCode successfully deleted"},
-            status=status.HTTP_204_NO_CONTENT,
-        )
+        return self.destroy(request, *args, **kwargs)
