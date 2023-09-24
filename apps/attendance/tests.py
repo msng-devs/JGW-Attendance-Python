@@ -376,9 +376,11 @@ class AttendanceApiTest(TestCase):
         )
 
         # then
+        response_data = response.json()
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIsNotNone(response.json())
-        self.assertEqual(len(response.json()), 1)
+        self.assertIsNotNone(response_data)
+        self.assertEqual(len(response_data.get("results")), 1)
 
     def test_get_all_filtered_attendances(self):
         pass
@@ -537,9 +539,11 @@ class AttendanceApiTest(TestCase):
         )
 
         # then
+        response_data = response.json()
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIsNotNone(response.json())
-        self.assertEqual(len(response.json()), 2)
+        self.assertIsNotNone(response_data)
+        self.assertEqual(len(response_data.get("results")), 2)
 
     @classmethod
     def tearDownClass(cls):
