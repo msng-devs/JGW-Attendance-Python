@@ -4,9 +4,9 @@ import string
 import random
 import datetime
 
-from django.db.models import Q
 from django.conf import settings
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework import status
 from rest_framework import mixins
@@ -30,6 +30,9 @@ from apps.utils.permissions import (
     IsProbationaryMember,
 )
 from apps.utils.decorators import common_swagger_decorator
+from apps.utils.paginations import CustomBasePagination
+from apps.utils import filters as filters
+from apps.utils import constants as constant
 
 logger = logging.getLogger("django")
 
@@ -136,8 +139,7 @@ class RegisterAttendanceCode(APIView):
         )
 
 
-class TimeTableList(APIView):
-    # TODO: Pagination 개선(전체적인 리펙토링)
+class TimeTableList(generics.ListAPIView):
     """
     다수 TimeTable 조회
 
@@ -149,66 +151,16 @@ class TimeTableList(APIView):
     * @author 이준혁(39기) bbbong9@gmail.com
     """
 
+    queryset = TimeTable.objects.all().order_by("-id")
     permission_classes = [IsAdminOrSelf]
+    serializer_class = TimeTableSerializer
+    pagination_class = CustomBasePagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = filters.TimeTableFilter
 
-    def get(self, request):
-        query_params = request.query_params
-
-        if not request.query_params:
-            timetables = TimeTable.objects.all()
-        else:
-            # 쿼리 필터 작성
-            filters = {}
-
-            # Equal Query
-            filters = {
-                "created_by": query_params.get("createdBy"),
-                "modified_by": query_params.get("modifiedBy"),
-            }
-
-            filters = {k: v for k, v in filters.items() if v is not None}
-
-            # Range Query
-            range_fields = {
-                "created_datetime": ("startCreatedDateTime", "endCreatedDateTime"),
-                "modified_datetime": ("startModifiedDateTime", "endModifiedDateTime"),
-                "timetable_datetime": ("startDateTime", "endDateTime"),
-            }
-
-            for field, (start_param, end_param) in range_fields.items():
-                start_date = query_params.get(start_param)
-                end_date = query_params.get(end_param)
-                if start_date:
-                    filters[f"{field}__gte"] = start_date
-                if end_date:
-                    filters[f"{field}__lte"] = end_date
-
-            # Like Query
-            like_queries = [
-                Q(name__icontains=query_params.get("name")),
-                Q(index__icontains=query_params.get("index")),
-            ]
-
-            # Result
-            timetables = TimeTable.objects.filter(*like_queries, **filters)
-
-        # Pagination
-        page_size = int(query_params.get("size", 1000))
-        page_number = int(query_params.get("page", 1))
-        sort_option = query_params.get("sort", "id,desc").split(",")
-        if len(sort_option) == 1:
-            sort_option.append("desc")
-
-        sort_field = sort_option[0]
-        sort_direction = "" if sort_option[1].lower() == "asc" else "-"
-
-        timetables = timetables.order_by(f"{sort_direction}{sort_field}")
-        start_index = (page_number - 1) * page_size
-        end_index = start_index + page_size
-        timetables = timetables[start_index:end_index]
-
-        serializer = TimeTableSerializer(timetables, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    @common_swagger_decorator
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
 
 class TimeTableDetail(

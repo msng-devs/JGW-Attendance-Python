@@ -6,6 +6,7 @@ charset-normalizer==3.2.0
 click==8.1.7
 dill==0.3.7
 Django==4.2.4
+django-filter==23.3
 django-utils-six==2.0
 djangorestframework==3.14.0
 drf-yasg==1.21.7

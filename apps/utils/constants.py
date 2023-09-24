@@ -1,0 +1,7 @@
+from typing import Final
+
+TIMETABLE_MIN_PAGE_SIZE: Final = 1
+TIMETABLE_MAX_PAGE_SIZE: Final = 1000
+
+DEFAULT_PAGE_SIZE: Final = 10
+MAX_PAGE_SIZE: Final = 1000

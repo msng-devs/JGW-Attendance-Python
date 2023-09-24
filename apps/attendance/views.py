@@ -7,7 +7,6 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
-from rest_framework.pagination import PageNumberPagination
 
 from .models import AttendanceType, Attendance
 from .serializers import AttendanceSerializer, AttendanceTypeSerializer
@@ -16,14 +15,6 @@ from apps.utils.permissions import get_auth_header, check_permission
 from apps.utils.scheduler import send_mail
 
 logger = logging.getLogger("django")
-
-
-class CustomPagination(PageNumberPagination):
-    page_size = 20
-    page_size_query_param = "size"
-    max_page_size = 200
-    page_query_param = "page"
-    ordering = "-id"  # Default ordering
 
 
 class AddAttendance(APIView):
@@ -182,6 +173,7 @@ class AttendanceDetail(APIView):
 
     * @author 이준혁(39기) bbbong9@gmail.com
     """
+
     def get(self, request, attendanceId):
         uid, role_id = get_auth_header(request)
         query_params = request.query_params
