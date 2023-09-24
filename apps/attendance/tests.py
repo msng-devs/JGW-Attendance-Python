@@ -380,6 +380,12 @@ class AttendanceApiTest(TestCase):
         self.assertIsNotNone(response.json())
         self.assertEqual(len(response.json()), 1)
 
+    def test_get_all_filtered_attendances(self):
+        pass
+
+    def test_get_all_paginated_attendances(self):
+        pass
+
     def test_get_attendances_not_self(self):
         attendance_url = reverse("attendance_list")
         attendance_url += "?memberID=test_not_admin_member_123456"
@@ -413,8 +419,10 @@ class AttendanceApiTest(TestCase):
         )
 
         # then
-        print(response.json())
+        response_data = response.json()
+
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response_data.get("message"), "해당 정보를 열람할 권한이 없습니다.")
 
     def test_get_attendances_not_admin(self):
         attendance_url = reverse("attendance_list")

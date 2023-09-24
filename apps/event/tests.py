@@ -156,10 +156,13 @@ class EventApiTest(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIsNotNone(response_data)
-        self.assertEqual(len(response_data), 2)
+        self.assertEqual(len(response_data.get("results")), 2)
 
-    def test_get_all_event_with_query_params(self):
+    def test_get_all_filtered_event(self):
         # TODO: Make test case for query params
+        pass
+
+    def test_get_all_paginated_event(self):
         pass
 
     def test_delete_event(self):

@@ -228,7 +228,7 @@ class TimeTableApiTest(TestCase):
         self.assertEqual(len(response_data_2.get("results")), 1)
 
     def test_get_all_paginated_timetable(self):
-        local_timezone = pytz.timezone('Asia/Seoul')
+        local_timezone = pytz.timezone("Asia/Seoul")
         start_time = local_timezone.localize(datetime.now())
         end_time = start_time + timedelta(hours=1)
 

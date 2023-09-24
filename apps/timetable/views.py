@@ -8,9 +8,7 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 
-from rest_framework import status
-from rest_framework import mixins
-from rest_framework import generics
+from rest_framework import status, mixins, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
@@ -32,7 +30,6 @@ from apps.utils.permissions import (
 from apps.utils.decorators import common_swagger_decorator
 from apps.utils.paginations import CustomBasePagination
 from apps.utils import filters as filters
-from apps.utils import constants as constant
 
 logger = logging.getLogger("django")
 
@@ -155,7 +152,6 @@ class TimeTableList(generics.ListAPIView):
     permission_classes = [IsAdminOrSelf]
     serializer_class = TimeTableSerializer
     pagination_class = CustomBasePagination
-    filter_backends = [DjangoFilterBackend]
     filterset_class = filters.TimeTableFilter
 
     @common_swagger_decorator
@@ -179,8 +175,8 @@ class TimeTableDetail(
     """
 
     queryset = TimeTable.objects.all()
-    serializer_class = TimeTableSerializer
     permission_classes = [IsAdminOrSelf]
+    serializer_class = TimeTableSerializer
     lookup_field = "id"
     lookup_url_kwarg = "timetableId"
 
@@ -210,8 +206,8 @@ class AttendanceCodeDetail(
     """
 
     queryset = TimeTable.objects.all()
-    serializer_class = AttendanceCodeSerializer
     permission_classes = [IsAdminOrSelf]
+    serializer_class = AttendanceCodeSerializer
     lookup_field = "id"
     lookup_url_kwarg = "timetableId"
 

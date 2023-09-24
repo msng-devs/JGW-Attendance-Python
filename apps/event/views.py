@@ -1,15 +1,15 @@
 import logging
 
-from django.db.models import Q
-from django.shortcuts import get_object_or_404
-
-from rest_framework import status
+from rest_framework import status, generics, mixins
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import Event
 from .serializers import EventSerializer
-from apps.utils.permissions import get_auth_header, check_permission
+from apps.utils.permissions import IsAdminOrSelf
+from apps.utils.decorators import common_swagger_decorator
+from apps.utils.paginations import CustomBasePagination
+from apps.utils import filters as filters
 
 logger = logging.getLogger("django")
 
@@ -26,13 +26,12 @@ class AddEvent(APIView):
     * @author 이준혁(39기) bbbong9@gmail.com
     """
 
+    permission_classes = [IsAdminOrSelf]
+    serializer_class = EventSerializer
+
+    @common_swagger_decorator
     def post(self, request):
-        uid, role_id = get_auth_header(request)
-
-        # RBAC - 4(임원진) 확인
-        check_permission(uid, role_id)
-
-        serializer = EventSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
             serializer.save()
@@ -41,7 +40,7 @@ class AddEvent(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class EventList(APIView):
+class EventList(generics.ListAPIView):
     """
     다수 Event를 조회
 
@@ -63,71 +62,23 @@ class EventList(APIView):
     * @author 이준혁(39기) bbbong9@gmail.com
     """
 
-    def get(self, request):
-        uid, role_id = get_auth_header(request)
-        query_params = request.query_params
+    queryset = Event.objects.all().order_by("-id")
+    permission_classes = [IsAdminOrSelf]
+    serializer_class = EventSerializer
+    pagination_class = CustomBasePagination
+    filterset_class = filters.EventFilter
 
-        # RBAC - 4(임원진) 확인
-        check_permission(uid, role_id)
-
-        if not request.query_params:
-            events = Event.objects.all()
-        else:
-            # 쿼리 필터 작성
-            filters = {}
-
-            # Equal Query
-            filters = {
-                "created_by": query_params.get("createdBy"),
-                "modified_by": query_params.get("modifiedBy"),
-            }
-
-            filters = {k: v for k, v in filters.items() if v is not None}
-
-            # Range Query
-            range_fields = {
-                "created_datetime": ("startCreatedDateTime", "endCreatedDateTime"),
-                "modified_datetime": ("startModifiedDateTime", "endModifiedDateTime"),
-                "event_datetime": ("startDateTime", "endDateTime"),
-            }
-
-            for field, (start_param, end_param) in range_fields.items():
-                start_date = query_params.get(start_param)
-                end_date = query_params.get(end_param)
-                if start_date:
-                    filters[f"{field}__gte"] = start_date
-                if end_date:
-                    filters[f"{field}__lte"] = end_date
-
-            # Like Query
-            like_queries = [
-                Q(name__icontains=query_params.get("name")),
-                Q(index__icontains=query_params.get("index")),
-            ]
-
-            # Result
-            events = Event.objects.filter(*like_queries, **filters)
-
-        # Pagination
-        page_size = int(query_params.get("size", 1000))
-        page_number = int(query_params.get("page", 1))
-        sort_option = query_params.get("sort", "id,desc").split(",")
-        if len(sort_option) == 1:
-            sort_option.append("desc")
-
-        sort_field = sort_option[0]
-        sort_direction = "" if sort_option[1].lower() == "asc" else "-"
-
-        events = events.order_by(f"{sort_direction}{sort_field}")
-        start_index = (page_number - 1) * page_size
-        end_index = start_index + page_size
-        events = events[start_index:end_index]
-
-        serializer = EventSerializer(events, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    @common_swagger_decorator
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
 
-class EventDetail(APIView):
+class EventDetail(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    generics.GenericAPIView,
+):
     """
     Event API
 
@@ -137,40 +88,20 @@ class EventDetail(APIView):
     * @author 이준혁(39기) bbbong9@gmail.com
     """
 
-    def get(self, request, eventId):
-        uid, role_id = get_auth_header(request)
+    queryset = Event.objects.all()
+    permission_classes = [IsAdminOrSelf]
+    serializer_class = EventSerializer
+    lookup_field = "id"
+    lookup_url_kwarg = "eventId"
 
-        event = get_object_or_404(Event, id=eventId)
+    @common_swagger_decorator
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
 
-        serializer = EventSerializer(event)
+    @common_swagger_decorator
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs, partial=True)
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def delete(self, request, eventId):
-        uid, role_id = get_auth_header(request)
-
-        # RBAC - 4(임원진) 확인
-        check_permission(uid, role_id)
-
-        event = get_object_or_404(Event, id=eventId)
-        event.delete()
-
-        return Response(
-            {"message": "Event deleted successfully."},
-            status=status.HTTP_204_NO_CONTENT,
-        )
-
-    def put(self, request, eventId):
-        uid, role_id = get_auth_header(request)
-
-        # RBAC - 4(임원진) 확인
-        check_permission(uid, role_id)
-
-        event = get_object_or_404(Event, id=eventId)
-
-        serializer = EventSerializer(event, data=request.data, partial=True)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    @common_swagger_decorator
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
