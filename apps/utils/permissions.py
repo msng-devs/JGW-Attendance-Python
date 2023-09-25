@@ -88,10 +88,6 @@ class IsProbationaryMember(BasePermission):
     message = "이 작업을 수행할 권한이 없습니다."
 
     def has_permission(self, request, view):
-        # GET, HEAD, OPTIONS 요청에 대한 접근을 허용
-        if request.method in SAFE_METHODS:
-            return True
-
         uid, role_id = get_auth_header(request)
 
         # uid와 role_id가 헤더에 포함되어 있는지 확인

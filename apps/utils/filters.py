@@ -66,6 +66,7 @@ class EventFilter(BaseFilterSet):
 
     # Like Query Options
     name = filters.CharFilter(field_name="name", lookup_expr="icontains")
+    index = filters.CharFilter(field_name="index", lookup_expr="icontains")
 
     class Meta:
         model = Event
@@ -79,6 +80,7 @@ class EventFilter(BaseFilterSet):
             "startDateTime",
             "endDateTime",
             "name",
+            "index",
         ]
 
 

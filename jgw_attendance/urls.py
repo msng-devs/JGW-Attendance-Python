@@ -28,39 +28,39 @@ v1_api_patterns = [
     path("timetable/", include("apps.timetable.urls")),
 ]
 
-schema_view_v1 = get_schema_view(
-    openapi.Info(
-        title="JGW Attendance Management System API",
-        default_version="v1",
-        description="해당 API를 사용하여 학회의 행사와 타임테이블을 관리하거나, 출결을 관리할 수 있습니다.\n\n해당 API를 사용하기 위해서 아래 요소들을 알고 있어야 합니다.",
-        contact=openapi.Contact(email="bbbong9@gmail.com"),
-    ),
-    validators=["flex"],
-    public=True,
-    permission_classes=(AllowAny,),
-    patterns=v1_api_patterns,
-)
-
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("attendance/api/v1/", include(v1_api_patterns)),
 ]
 
+schema_view_v1 = get_schema_view(
+    openapi.Info(
+        title="JGW Attendance Management System API",
+        default_version="v1",
+        description="해당 API를 사용하여 학회의 행사와 타임테이블을 관리하거나, 출결을 관리할 수 있습니다.\n\n해당 API를 사용하기 위해서 아래 요소들을 알고 있어야 합니다.",  # noqa: E501
+        contact=openapi.Contact(email="bbbong9@gmail.com"),
+    ),
+    validators=["flex"],
+    public=True,
+    permission_classes=(AllowAny,),
+    patterns=urlpatterns,
+)
+
 if settings.DEBUG:
     urlpatterns += [
         # Swagger Docs
         path(
-            "swagger<format>/",
+            "attendance/api/v1/swagger<format>/",
             schema_view_v1.without_ui(cache_timeout=0),
             name="schema-json",
         ),
         path(
-            "swagger/",
+            "attendance/api/v1/swagger/",
             schema_view_v1.with_ui("swagger", cache_timeout=0),
             name="schema-swagger-ui",
         ),
         path(
-            "redoc/",
+            "attendance/api/v1/redoc/",
             schema_view_v1.with_ui("redoc", cache_timeout=0),
             name="schema-redoc",
         ),

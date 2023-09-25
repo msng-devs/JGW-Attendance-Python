@@ -383,10 +383,90 @@ class AttendanceApiTest(TestCase):
         self.assertEqual(len(response_data.get("results")), 1)
 
     def test_get_all_filtered_attendances(self):
-        pass
+        attendance_url = reverse("attendance_list")
+
+        # given
+        self.client = TestUtils.add_header(
+            self.client, self.test_member_uid, self.test_role_id
+        )
+
+        # when
+        response = self.client.get(
+            attendance_url,
+            {"memberID": self.test_member_uid},
+            content_type="application/json",
+        )
+
+        response_2 = self.client.get(
+            attendance_url,
+            {"timeTableID": 1},
+            content_type="application/json",
+        )
+
+        # then
+        response_data = response.json()
+        response_data_2 = response_2.json()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIsNotNone(response_data)
+        self.assertEqual(len(response_data.get("results")), 1)
+        self.assertEqual(
+            response.data.get("results")[0].get("member_id"), self.test_member_uid
+        )
+
+        self.assertEqual(response_2.status_code, status.HTTP_200_OK)
+        self.assertIsNotNone(response_data_2)
+        self.assertEqual(len(response_data_2.get("results")), 2)
+        self.assertEqual(response_2.data.get("results")[0].get("time_table_id"), 1)
 
     def test_get_all_paginated_attendances(self):
-        pass
+        attendance_url = reverse("attendance_list")
+
+        # given
+        self.client = TestUtils.add_header(
+            self.client, self.test_member_uid, self.test_role_id
+        )
+
+        for i in range(10):
+            attendance_data = {
+                "member_id": self.test_member_uid,
+                "attendance_type_id": 1,
+                "time_table_id": 1,
+                "index": f"this is test attendance {i}",
+            }
+            TestUtils.create_test_data(
+                self.client, reverse("add_attendance"), attendance_data
+            )
+
+        # when
+        response = self.client.get(
+            attendance_url,
+            {"page": 1, "page_size": 1},
+            content_type="application/json",
+        )
+
+        response_2 = self.client.get(
+            attendance_url,
+            {"page": 1, "page_size": 10},
+            content_type="application/json",
+        )
+
+        # then
+        response_data = response.json()
+        response_data_2 = response_2.json()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIsNotNone(response_data)
+        self.assertEqual(len(response_data.get("results")), 1)
+
+        self.assertEqual(response_2.status_code, status.HTTP_200_OK)
+        self.assertIsNotNone(response_data_2)
+        self.assertEqual(len(response_data_2.get("results")), 10)
+        self.assertEqual(response_data_2.get("previous"), None)
+        self.assertEqual(
+            response_data_2.get("next"),
+            "http://testserver/attendance/api/v1/attendance/?page=2&page_size=10",
+        )
 
     def test_get_attendances_not_self(self):
         attendance_url = reverse("attendance_list")

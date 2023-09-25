@@ -2,7 +2,6 @@ from rest_framework import serializers
 
 from .models import Attendance, AttendanceType, AttendanceCode
 from apps.common.models import Member
-from apps.timetable.models import TimeTable
 
 
 class AttendanceSerializer(serializers.ModelSerializer):
@@ -72,7 +71,7 @@ class AttendanceCodeAddRequestSerializer(serializers.Serializer):
         error_messages={
             "required": "exp_sec -> 해당 필드는 필수입니다.",
             "max_value": "exp_sec -> 설정가능한 최대 유효 시간은 2592000(초) 입니다.",
-            "min_value": "exp_sec -> 해당 필드에 음수는 사용할 수 없습니다. 만약 영구적인 출결 코드를 발급할려면 (-1)을 입력하세요.",
+            "min_value": "exp_sec -> 해당 필드에 음수는 사용할 수 없습니다. 만약 영구적인 출결 코드를 발급할려면 (-1)을 입력하세요.",  # noqa E501
         },
     )
 

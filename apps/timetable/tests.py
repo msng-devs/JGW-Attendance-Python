@@ -267,7 +267,7 @@ class TimeTableApiTest(TestCase):
             content_type="application/json",
         )
 
-        params = {"page": 2, "size": 10}
+        params = {"page": 2, "page_size": 10}
         response_nextpage = self.client.get(
             timetable_url,
             params,
@@ -289,11 +289,11 @@ class TimeTableApiTest(TestCase):
         self.assertEqual(len(response_data_2.get("results")), 10)
         self.assertEqual(
             response_data_2.get("previous"),
-            "http://testserver/attendance/api/v1/timetable/?page=1&size=10",
+            "http://testserver/attendance/api/v1/timetable/?page=1&page_size=10",
         )
         self.assertEqual(
             response_data_2.get("next"),
-            "http://testserver/attendance/api/v1/timetable/?page=3&size=10",
+            "http://testserver/attendance/api/v1/timetable/?page=3&page_size=10",
         )
 
     def test_delete_timetable(self):

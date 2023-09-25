@@ -159,11 +159,82 @@ class EventApiTest(TestCase):
         self.assertEqual(len(response_data.get("results")), 2)
 
     def test_get_all_filtered_event(self):
-        # TODO: Make test case for query params
-        pass
+        event_url = reverse("event_list")
+
+        # given
+        self.client = TestUtils.add_header(
+            self.client, self.test_member_uid, self.test_role_id
+        )
+
+        # when
+        response = self.client.get(
+            event_url,
+            {"index": "this is test"},
+            content_type="application/json",
+        )
+
+        response_2 = self.client.get(
+            event_url,
+            {"name": "test event 2"},
+            content_type="application/json",
+        )
+
+        # then
+        response_data = response.json()
+        response_data_2 = response_2.json()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIsNotNone(response_data)
+        self.assertEqual(len(response_data.get("results")), 1)
+        self.assertEqual(response_data.get("results")[0].get("name"), "test event")
+        self.assertEqual(
+            response_data.get("results")[0].get("index"), "this is test event index"
+        )
+
+        self.assertEqual(response_2.status_code, status.HTTP_200_OK)
+        self.assertIsNotNone(response_data_2)
+        self.assertEqual(len(response_data_2.get("results")), 1)
+        self.assertEqual(response_data_2.get("results")[0].get("name"), "test event 2")
+        self.assertEqual(
+            response_data_2.get("results")[0].get("index"),
+            "this is another test event index",
+        )
 
     def test_get_all_paginated_event(self):
-        pass
+        event_url = reverse("event_list")
+
+        # given
+        self.client = TestUtils.add_header(
+            self.client, self.test_member_uid, self.test_role_id
+        )
+
+        for i in range(10):
+            event_data = {
+                "name": f"test event {i}",
+                "index": f"this is test event index {i}",
+                "start_date_time": "2022-08-04T04:16:00Z",
+                "end_date_time": "2022-08-04T04:16:00Z",
+            }
+            TestUtils.create_test_data(self.client, reverse("add_event"), event_data)
+
+        # when
+        response = self.client.get(
+            event_url,
+            {"page": 1, "page_size": 5},
+            content_type="application/json",
+        )
+
+        # then
+        response_data = response.json()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIsNotNone(response_data)
+        self.assertEqual(len(response_data.get("results")), 5)
+        self.assertEqual(response_data.get("previous"), None)
+        self.assertEqual(
+            response_data.get("next"),
+            "http://testserver/attendance/api/v1/event/?page=2&page_size=5",
+        )
 
     def test_delete_event(self):
         event_url = reverse("event_detail", kwargs={"eventId": self.event_id})

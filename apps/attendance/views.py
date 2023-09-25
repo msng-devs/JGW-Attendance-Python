@@ -118,6 +118,7 @@ class AttendanceList(generics.ListAPIView):
 
     @common_swagger_decorator
     def get(self, request, *args, **kwargs):
+        print(request.uid)
         uid, role_id = get_auth_header(request)
 
         # 권한 체크
