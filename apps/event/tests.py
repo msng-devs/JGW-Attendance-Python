@@ -1,3 +1,10 @@
+# --------------------------------------------------------------------------
+# Event Application의 테스트케이스를 정의한 모듈입니다.
+#
+# :class EventApiTest: Event Application의 Endpoint를 테스트합니다.
+#
+# @author 이준혁(39기) bbbong9@gmail.com
+# --------------------------------------------------------------------------
 import logging
 
 import json

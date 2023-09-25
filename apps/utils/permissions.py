@@ -1,3 +1,8 @@
+# --------------------------------------------------------------------------
+# 유저 권한을 확인하는 모듈 입니다.
+#
+# @author 이준혁(39기) bbbong9@gmail.com
+# --------------------------------------------------------------------------
 from django.utils.six import text_type
 
 from rest_framework import HTTP_HEADER_ENCODING

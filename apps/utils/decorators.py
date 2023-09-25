@@ -1,3 +1,8 @@
+# --------------------------------------------------------------------------
+# swagger 문서를 위한 decorator를 정의하는 모듈입니다.
+#
+# @author 이준혁(39기) bbbong9@gmail.com
+# --------------------------------------------------------------------------
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 

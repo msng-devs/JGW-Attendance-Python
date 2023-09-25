@@ -1,3 +1,11 @@
+# --------------------------------------------------------------------------
+# 자람그룹웨어 서비스 규격에 맞는 Exception을 핸들링하는 모듈입니다.
+#
+# Attendance를 포함한 모든 자람그룹웨어 서비스는 다음과 같은 에러메시지 규격을 따릅니다.
+# -> XX(마이크로서비스 분류 코드, 2글자)-XXXX(에러타입)-001(에러코드번호)
+#
+# @author 이준혁(39기) bbbong9@gmail.com
+# --------------------------------------------------------------------------
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 

@@ -1,3 +1,12 @@
+# --------------------------------------------------------------------------
+# 서비스에 사용되는 Base Models를 정의한 모듈입니다.
+#
+# :class BaseEntity: 모든 모델의 공통 필드를 정의합니다.
+# :class Role: RBAC를 위해 사용되며, 권한을 정의합니다.
+# :class Member: RBAC를 위해 사용되며, 회원을 정의합니다.
+#
+# @author 이준혁(39기) bbbong9@gmail.com
+# --------------------------------------------------------------------------
 from django.db import models
 from django.utils import timezone
 

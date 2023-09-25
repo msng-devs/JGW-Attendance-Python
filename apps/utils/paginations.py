@@ -1,3 +1,12 @@
+# --------------------------------------------------------------------------
+# 페이지네이션을 구현하기 위한 모듈입니다.
+#
+# Attendance 서비스 중 CustomBasePagination을 상속받는 모든 클래스는
+# 쿼리파라미터에 page, page_size를 명시하여 페이지에 표현되는 데이터의 개수를
+# 조절할 수 있습니다.
+#
+# @author 이준혁(39기) bbbong9@gmail.com
+# --------------------------------------------------------------------------
 from rest_framework.pagination import PageNumberPagination
 from collections import OrderedDict
 

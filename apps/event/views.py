@@ -1,3 +1,8 @@
+# --------------------------------------------------------------------------
+# Event Application의 Views를 정의한 모듈입니다.
+#
+# @author 이준혁(39기) bbbong9@gmail.com
+# --------------------------------------------------------------------------
 import logging
 
 from rest_framework import status, generics, mixins
@@ -22,8 +27,6 @@ class AddEvent(APIView):
     RBAC - 4(어드민)
 
     해당 API를 통해 신규 Event를 추가할 수 있습니다.
-
-    * @author 이준혁(39기) bbbong9@gmail.com
     """
 
     permission_classes = [IsAdminOrSelf]
@@ -58,8 +61,6 @@ class EventList(generics.ListAPIView):
     또한 모든 Option들은 And로 동작합니다.
 
     만약 "?memberID=456465456&timeTableID=1"라는 인자가 있다면, memberID가 "456465456"이고, timeTableID가 1인 Attendance를 찾습니다.
-
-    * @author 이준혁(39기) bbbong9@gmail.com
     """
 
     queryset = Event.objects.all().order_by("-id")
@@ -84,8 +85,6 @@ class EventDetail(
 
     ---
     event 를 추가하고, 삭제하고, 수정하는 API를 제공합니다.
-
-    * @author 이준혁(39기) bbbong9@gmail.com
     """
 
     queryset = Event.objects.all()

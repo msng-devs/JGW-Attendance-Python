@@ -1,3 +1,8 @@
+# --------------------------------------------------------------------------
+# AttendanceCode(출석코드)를 생성, 삭제, 조회하는 모듈입니다.
+#
+# @author 이준혁(39기) bbbong9@gmail.com
+# --------------------------------------------------------------------------
 from apps.attendance.models import AttendanceCode
 from apps.attendance.serializers import AttendanceCodeSerializer
 

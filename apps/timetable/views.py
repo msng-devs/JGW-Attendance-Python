@@ -1,3 +1,8 @@
+# --------------------------------------------------------------------------
+# TimeTable Application의 Views를 정의한 모듈입니다.
+#
+# @author 이준혁(39기) bbbong9@gmail.com
+# --------------------------------------------------------------------------
 import logging
 
 import string
@@ -41,8 +46,6 @@ class AddTimeTable(APIView):
     RBAC - 4(어드민)
 
     해당 API를 통해 신규 TimeTable을 추가할 수 있습니다.
-
-    * @author 이준혁(39기) bbbong9@gmail.com
     """
 
     permission_classes = [IsAdminOrSelf]
@@ -74,8 +77,6 @@ class RegisterAttendanceCode(APIView):
 
     ## Parameter 설명
         - timetableId: 출결을 등록할 TimeTable의 ID
-
-    * @author 이준혁(39기) bbbong9@gmail.com
     """
 
     register_attendance_type = 1
@@ -143,8 +144,6 @@ class TimeTableList(generics.ListAPIView):
     Auth - 인증 필요 (문서 설명 수정 예정)
 
     여러 time table들을 조회, 페이징, 정렬, 필터링을 통해 조회할 수 있습니다.
-
-    * @author 이준혁(39기) bbbong9@gmail.com
     """
 
     queryset = TimeTable.objects.all().order_by("-id")
@@ -169,8 +168,6 @@ class TimeTableDetail(
 
     ---
     TimeTable을 조회하고, 삭제하고, 수정하는 API를 제공합니다.
-
-    * @author 이준혁(39기) bbbong9@gmail.com
     """
 
     queryset = TimeTable.objects.all()
@@ -200,8 +197,6 @@ class AttendanceCodeDetail(
 
     ---
     출결 코드를 추가하고, 삭제하고, 사용하는 API를 제공합니다.
-
-    * @author 이준혁(39기) bbbong9@gmail.com
     """
 
     queryset = TimeTable.objects.all()

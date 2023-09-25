@@ -1,3 +1,11 @@
+# --------------------------------------------------------------------------
+# Event Application의 테스트케이스를 정의한 모듈입니다.
+#
+# :class AttendanceSchedulerTest: Attendance Application의 Scheduler를 테스트합니다.
+# :class AttendanceApiTest: Attendance Application의 Endpoint를 테스트합니다.
+#
+# @author 이준혁(39기) bbbong9@gmail.com
+# --------------------------------------------------------------------------
 import logging
 
 import json
