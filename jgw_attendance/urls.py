@@ -1,3 +1,4 @@
+# flake8: noqa
 """
 URL configuration for jgw_attendance project.
 
