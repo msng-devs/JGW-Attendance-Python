@@ -5,6 +5,7 @@
 # --------------------------------------------------------------------------
 from apps.attendance.models import AttendanceCode
 from apps.attendance.serializers import AttendanceCodeSerializer
+from apps.utils.exceptions import AlreadyHasCodeError, InvalidAttendanceCodeError
 
 
 class AttendanceCodeService:
@@ -18,7 +19,7 @@ class AttendanceCodeService:
             time_table_id=time_table_id
         ).first()
         if existing_code:
-            raise Exception("ALREADY_HAS_CODE")  # TODO: 적절한 예외로 대체
+            raise AlreadyHasCodeError
 
         new_code = AttendanceCode(
             code=validated_data.get("code"),
@@ -39,7 +40,7 @@ class AttendanceCodeService:
             existing_code = AttendanceCode.objects.get(time_table_id=time_table_id)
             existing_code.delete()
         except AttendanceCode.DoesNotExist:
-            raise Exception("INVALID_ATTENDANCE_CODE")  # TODO: 적절한 예외로 대체
+            raise InvalidAttendanceCodeError
 
     @staticmethod
     def get_code_by_time_table(time_table_id):
@@ -48,4 +49,4 @@ class AttendanceCodeService:
 
             return existing_code
         except AttendanceCode.DoesNotExist:
-            raise Exception("INVALID_ATTENDANCE_CODE")  # TODO: 적절한 예외로 대체
+            raise InvalidAttendanceCodeError
