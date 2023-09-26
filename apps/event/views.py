@@ -15,6 +15,7 @@ from apps.utils.permissions import IsAdminOrSelf
 from apps.utils.decorators import common_swagger_decorator
 from apps.utils.paginations import CustomBasePagination
 from apps.utils import filters as filters
+from apps.utils import documentation as docs
 
 logger = logging.getLogger("django")
 
@@ -45,22 +46,9 @@ class AddEvent(APIView):
 
 class EventList(generics.ListAPIView):
     """
-    다수 Event를 조회
+    다수 Event를 조회하는 API
 
-    ---
-    RBAC - 4(어드민)
-
-    Query Options, 혹은 Page Options 등을 사용하여 attendance를 조회하거나, pagination 작업을 수행할 수 있습니다.
-
-    주의! 모든 option들은 단 한개의 인자만 수용가능합니다!
-
-    (O) "?memberID=456465456&timeTableID=1"
-
-    (X) "?memberID=456465456,456456456465&timeTableID=1,123123"
-
-    또한 모든 Option들은 And로 동작합니다.
-
-    만약 "?memberID=456465456&timeTableID=1"라는 인자가 있다면, memberID가 "456465456"이고, timeTableID가 1인 Attendance를 찾습니다.
+    세부 사항은 swagger docs에 기재되어 있습니다.
     """
 
     queryset = Event.objects.all().order_by("-id")
@@ -104,3 +92,6 @@ class EventDetail(
     @common_swagger_decorator
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
+
+EventList.__doc__ = docs.get_event_doc()

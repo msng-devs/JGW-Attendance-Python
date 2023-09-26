@@ -68,7 +68,8 @@ class AddAttendance(APIView):
 
 
 class GetAttendanceType(generics.ListAPIView):
-    """출결 종류를 조회하는 API
+    """
+    출결 종류를 조회하는 API
 
     세부 사항은 swagger docs에 기재되어 있습니다.
     """
@@ -86,13 +87,9 @@ class GetAttendanceType(generics.ListAPIView):
 
 class AttendanceList(generics.ListAPIView):
     """
-    다수 Attendance를 조회
+    다수 Attendance를 조회하는 API
 
-    ---
-    RBAC - 2(수습 회원) 이상
-
-    자신의 정보를 조회할 때는 role이 2(수습 회원)이어도 괜찮습니다.
-    다만, 다른 사람의 정보를 조회할 때는 role이 4(임원진)이어야 합니다.
+    세부 사항은 swagger docs에 기재되어 있습니다.
     """
 
     queryset = Attendance.objects.all().order_by("-id")
@@ -147,3 +144,4 @@ class AttendanceDetail(
 
 
 GetAttendanceType.__doc__ = docs.get_attendance_type_doc()
+AttendanceList.__doc__ = docs.get_attendance_doc()

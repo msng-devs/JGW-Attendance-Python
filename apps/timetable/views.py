@@ -34,6 +34,7 @@ from apps.utils.permissions import (
 from apps.utils.decorators import common_swagger_decorator
 from apps.utils.paginations import CustomBasePagination
 from apps.utils import filters as filters
+from apps.utils import documentation as docs
 
 logger = logging.getLogger("django")
 
@@ -138,12 +139,9 @@ class RegisterAttendanceCode(APIView):
 
 class TimeTableList(generics.ListAPIView):
     """
-    다수 TimeTable 조회
+    다수 TimeTable 조회하는 API
 
-    ---
-    Auth - 인증 필요 (문서 설명 수정 예정)
-
-    여러 time table들을 조회, 페이징, 정렬, 필터링을 통해 조회할 수 있습니다.
+    세부 사항은 swagger docs에 기재되어 있습니다.
     """
 
     queryset = TimeTable.objects.all().order_by("-id")
@@ -265,3 +263,6 @@ class AttendanceCodeDetail(
             raise NotFound("Code not found")
 
         return self.destroy(request, *args, **kwargs)
+
+
+TimeTableList.__doc__ = docs.get_timetable_doc()

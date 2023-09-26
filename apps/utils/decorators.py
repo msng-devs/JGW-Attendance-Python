@@ -14,13 +14,13 @@ def common_swagger_decorator(func):
                 name="uid",
                 in_=openapi.IN_HEADER,
                 type=openapi.TYPE_STRING,
-                description="User ID",
+                description="요청을 보내는 유저의 UID 입니다.",
             ),
             openapi.Parameter(
                 name="role_id",
                 in_=openapi.IN_HEADER,
                 type=openapi.TYPE_STRING,
-                description="Role ID",
+                description="요청을 보내는 유저의 Role ID입니다.",
             ),
         ]
     )

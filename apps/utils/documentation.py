@@ -9,9 +9,9 @@ def description_query_param():
 ## Query parameters (공통 설명)
 **주의!** 모든 option들은 단 한개의 인자만 수용가능합니다!
 
-(O) "?memberID=456465456&timeTableID=1"
+ * (O) "?memberID=456465456&timeTableID=1"
 
-(X) "?memberID=456465456,456456456465&timeTableID=1,123123"
+ * (X) "?memberID=456465456,456456456465&timeTableID=1,123123"
 
 또한 모든 Option들은 And로 동작합니다.
 
@@ -223,6 +223,232 @@ def get_attendance_type_doc():
             item_name="AttendanceType",
             params={
                 "id": {
+                    "description": "AttendanceType의 ID에 대하여 정렬합니다.",
+                },
+                "name": {
+                    "description": "AttendanceType의 이름에 대하여 정렬합니다.",
+                },
+                "index": {
+                    "description": "index에 대하여 정렬합니다.",
+                },
+                "createdDateTime": {
+                    "description": "생성된 시간순으로 정렬합니다.",
+                },
+                "modifiedDateTime": {
+                    "description": "마지막으로 수정된 시간 순으로 정렬합니다.",
+                },
+                "startDateTime": {
+                    "description": "시작 시간 순으로 정렬합니다.",
+                },
+                "endDateTime": {
+                    "description": "종료 시간 순으로 정렬합니다.",
+                },
+                "createdBy": {
+                    "description": "생성한자에 대하여 정렬합니다.",
+                },
+                "modifiedBy": {
+                    "description": "마지막으로 수정한자에 대하여 정렬합니다.",
+                },
+            },
+        )
+    )
+
+
+# Attendance
+def get_attendance_doc():
+    base_description = """다수 Attendance를 조회
+
+---
+RBAC - 2(수습 회원) 이상
+
+자신의 정보를 조회할 때는 role이 2(수습 회원)이어도 괜찮습니다.
+
+다만, 다른 사람의 정보를 조회할 때는 role이 4(임원진)이어야 합니다.
+"""
+
+    return (
+        base_description
+        + "\n"
+        + description_query_param()
+        + "\n"
+        + description_equal_query(
+            item_name="Attendance",
+            params={
+                "attendanceTypeID": {
+                    "type": "Number",
+                    "description": "해당 Attendance의 AttendanceType ID",
+                },
+                "memberID": {
+                    "type": "String",
+                    "description": "해당 Attendance의 Member ID",
+                },
+                "timeTableID": {
+                    "type": "Number",
+                    "description": "해당 Attendance의 TimeTable ID",
+                },
+                "createdBy": {
+                    "type": "String",
+                    "description": "해당 Attendance를 생성한 사람",
+                },
+                "modifiedBy": {
+                    "type": "String",
+                    "description": "해당 Attendance를 마지막으로 수정한 사람",
+                },
+            },
+        )
+        + "\n"
+        + description_range_query(
+            item_name="Attendance",
+            params={
+                "CreatedDateTime": {
+                    "type": "DateTime(yyyy-MM-dd HH:mm:ss)",
+                    "start_range_param": "startCreatedDateTime",
+                    "end_range_param": "endCreatedDateTime",
+                    "description": "해당 Attendance가 생성된 시간",
+                },
+                "ModifiedDateTime": {
+                    "type": "DateTime(yyyy-MM-dd HH:mm:ss)",
+                    "start_range_param": "startModifiedDateTime",
+                    "end_range_param": "endModifiedDateTime",
+                    "description": "해당 Attendance가 마지막으로 수정된 시간",
+                },
+            },
+        )
+        + "\n"
+        + description_like_query(
+            item_name="Attendance",
+            params={
+                "index": {
+                    "type": "String",
+                    "description": "해당 Attendance의 부연설명",
+                },
+            },
+        )
+        + "\n"
+        + description_pagination(
+            item_name="Attendance",
+            params={
+                "Page의 크기": {
+                    "description": "page",
+                    "size": "Page의 위치",
+                },
+            },
+        )
+        + "\n"
+        + description_sort(
+            item_name="Attendance",
+            params={
+                "id": {
+                    "description": "Attendance의 ID에 대하여 정렬합니다.",
+                },
+                "attendanceType": {
+                    "description": "attendanceType의 ID에 대하여 정렬합니다.",
+                },
+                "member": {
+                    "description": "member의 ID에 대하여 정렬합니다.",
+                },
+                "timeTable": {
+                    "description": "timeTable의 ID에 대하여 정렬합니다.",
+                },
+                "index": {
+                    "description": "index에 대하여 정렬합니다.",
+                },
+                "createdDateTime": {
+                    "description": "생성된 시간순으로 정렬합니다.",
+                },
+                "modifiedDateTime": {
+                    "description": "마지막으로 수정된 시간 순으로 정렬합니다.",
+                },
+                "createdBy": {
+                    "description": "생성한자에 대하여 정렬합니다.",
+                },
+                "modifiedBy": {
+                    "description": "마지막으로 수정한자에 대하여 정렬합니다.",
+                },
+            },
+        )
+    )
+
+
+# Event
+def get_event_doc():
+    base_description = """다수 Event를 조회
+
+---
+RBAC - 4(어드민)
+"""
+
+    return (
+        base_description
+        + "\n"
+        + description_query_param()
+        + "\n"
+        + description_equal_query(
+            item_name="Event",
+            params={
+                "createdBy": {
+                    "type": "String",
+                    "description": "해당 event를 생성한 사람",
+                },
+                "modifiedBy": {
+                    "type": "String",
+                    "description": "해당 event를 마지막으로 수정한 사람",
+                },
+            },
+        )
+        + "\n"
+        + description_range_query(
+            item_name="Event",
+            params={
+                "CreatedDateTime": {
+                    "type": "DateTime(yyyy-MM-dd HH:mm:ss)",
+                    "start_range_param": "startCreatedDateTime",
+                    "end_range_param": "endCreatedDateTime",
+                    "description": "해당 event가 생성된 시간",
+                },
+                "ModifiedDateTime": {
+                    "type": "DateTime(yyyy-MM-dd HH:mm:ss)",
+                    "start_range_param": "startModifiedDateTime",
+                    "end_range_param": "endModifiedDateTime",
+                    "description": "해당 event가 마지막으로 수정된 시간",
+                },
+                "DATETIME": {
+                    "type": "DateTime(yyyy-MM-dd HH:mm:ss)",
+                    "start_range_param": "startDateTime",
+                    "end_range_param": "endDateTime",
+                    "description": "해당 event의 진행 기간",
+                },
+            },
+        )
+        + "\n"
+        + description_like_query(
+            item_name="Event",
+            params={
+                "name": {
+                    "type": "String",
+                    "description": "해당 event의 이름입니다.",
+                },
+                "index": {
+                    "type": "String",
+                    "description": "해당 event에 대한 부연설명",
+                },
+            },
+        )
+        + "\n"
+        + description_pagination(
+            item_name="Event",
+            params={
+                "Page의 크기": {
+                    "description": "page",
+                    "size": "Page의 위치",
+                },
+            },
+        )
+        + "\n"
+        + description_sort(
+            item_name="Event",
+            params={
+                "id": {
                     "description": "event의 ID에 대하여 정렬합니다.",
                 },
                 "name": {
@@ -230,6 +456,118 @@ def get_attendance_type_doc():
                 },
                 "index": {
                     "description": "index에 대하여 정렬합니다.",
+                },
+                "createdDateTime": {
+                    "description": "생성된 시간순으로 정렬합니다.",
+                },
+                "modifiedDateTime": {
+                    "description": "마지막으로 수정된 시간 순으로 정렬합니다.",
+                },
+                "startDateTime": {
+                    "description": "시작 시간 순으로 정렬합니다.",
+                },
+                "endDateTime": {
+                    "description": "종료 시간 순으로 정렬합니다.",
+                },
+                "createdBy": {
+                    "description": "생성한자에 대하여 정렬합니다.",
+                },
+                "modifiedBy": {
+                    "description": "마지막으로 수정한자에 대하여 정렬합니다.",
+                },
+            },
+        )
+    )
+
+
+# TimeTable
+def get_timetable_doc():
+    base_description = """다수 TimeTable을 조회
+
+---
+Auth - 인증 필요
+
+여러 time table들을 조회, 페이징, 정렬, 필터링을 통해 조회할 수 있습니다.
+"""
+
+    return (
+        base_description
+        + "\n"
+        + description_query_param()
+        + "\n"
+        + description_equal_query(
+            item_name="TimeTable",
+            params={
+                "eventID": {
+                    "type": "Number",
+                    "description": "해당 TimeTable이 속한 가지고 있는 Event의 ID",
+                },
+                "createdBy": {
+                    "type": "String",
+                    "description": "해당 TimeTable를 생성한 사람",
+                },
+                "modifiedBy": {
+                    "type": "String",
+                    "description": "해당 TimeTable를 마지막으로 수정한 사람",
+                },
+            },
+        )
+        + "\n"
+        + description_range_query(
+            item_name="TimeTable",
+            params={
+                "CreatedDateTime": {
+                    "type": "DateTime(yyyy-MM-dd HH:mm:ss)",
+                    "start_range_param": "startCreatedDateTime",
+                    "end_range_param": "endCreatedDateTime",
+                    "description": "해당 TimeTable가 생성된 시간",
+                },
+                "ModifiedDateTime": {
+                    "type": "DateTime(yyyy-MM-dd HH:mm:ss)",
+                    "start_range_param": "startModifiedDateTime",
+                    "end_range_param": "endModifiedDateTime",
+                    "description": "해당 TimeTable가 마지막으로 수정된 시간",
+                },
+                "DATETIME": {
+                    "type": "DateTime(yyyy-MM-dd HH:mm:ss)",
+                    "start_range_param": "startDateTime",
+                    "end_range_param": "endDateTime",
+                    "description": "해당 TimeTable의 기간",
+                },
+            },
+        )
+        + "\n"
+        + description_like_query(
+            item_name="TimeTable",
+            params={
+                "name": {
+                    "type": "String",
+                    "description": "해당 TimeTable의 이름입니다.",
+                },
+            },
+        )
+        + "\n"
+        + description_pagination(
+            item_name="TimeTable",
+            params={
+                "Page의 크기": {
+                    "description": "page",
+                    "size": "Page의 위치",
+                },
+            },
+        )
+        + "\n"
+        + description_sort(
+            item_name="TimeTable",
+            params={
+                "id": {
+                    "description": "TimeTable의 ID에 대하여 정렬합니다.",
+                },
+                "name": {
+                    "description": "TimeTable의 이름에 대하여 정렬합니다.",
+                },
+                "event": {
+                    "description": "TimeTable이 속한 Event",
                 },
                 "createdDateTime": {
                     "description": "생성된 시간순으로 정렬합니다.",
