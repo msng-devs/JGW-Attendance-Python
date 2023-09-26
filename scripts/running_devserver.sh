@@ -1,0 +1,1 @@
+python manage.py runserver --settings=jgw_attendance.settings.settings_dev

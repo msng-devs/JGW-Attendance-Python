@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     "apps.attendance",
     "apps.timetable",
     "rest_framework",
+    "drf_yasg",
+    "django_filters",
 ]
 
 MIDDLEWARE = [
@@ -121,6 +123,7 @@ REST_FRAMEWORK = {
     ],
     "EXCEPTION_HANDLER": "apps.utils.exceptions.custom_exception_handler",
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
 }
 
 LOGGING = {

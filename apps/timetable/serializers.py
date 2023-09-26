@@ -1,3 +1,8 @@
+# --------------------------------------------------------------------------
+# TimeTable Application의 Serializer를 정의한 모듈입니다.
+#
+# @author 이준혁(39기) bbbong9@gmail.com
+# --------------------------------------------------------------------------
 from rest_framework import serializers
 
 from .models import TimeTable

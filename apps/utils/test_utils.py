@@ -1,3 +1,9 @@
+# --------------------------------------------------------------------------
+# TestCase에서 공통적으로 사용되는 메소드들을 모아놓은 클래스입니다.
+# 실제 서비스에서는 사용되지 않습니다.
+#
+# @author 이준혁(39기) bbbong9@gmail.com
+# --------------------------------------------------------------------------
 import json
 
 
@@ -25,3 +31,37 @@ class TestUtils:
     def verify_response_data(response, expected_data):
         for key, value in expected_data.items():
             assert response.data[key] == value
+
+    def make_test_pull_socket(host, port):
+        import zmq
+
+        context = zmq.Context()
+        socket = context.socket(zmq.PULL)
+        socket.bind(f"tcp://{host}:{port}")
+        print("PULL Socket Connected at:", port)
+
+        return socket
+
+    def get_message_from_push_socket(socket):
+        received_message = socket.recv_json()
+        print("Recieved Message From PUSH Socket:", received_message)
+        return received_message
+
+    def send_mail(socket):
+        from django.core.mail import EmailMessage
+
+        received_message = socket.recv_json()
+        print("Recieved Message From PUSH Socket:", received_message)
+
+        received_message = json.loads(received_message)
+        to_email = received_message["to"]
+        subject = received_message["subject"]
+        message = received_message.get("template", "")
+
+        email = EmailMessage(
+            subject,  # 이메일 제목
+            message,  # 내용
+            to=[to_email],  # 받는 이메일
+        )
+        result = email.send()
+        print("Mail Sent status", result)
