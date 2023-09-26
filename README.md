@@ -1,4 +1,4 @@
-# JGW-Penalty-Python
+# JGW-Attendance-Python
 @author 이준혁(39기) bbbong9@gmail.com
 
 자람 그룹웨어의 출결 관리 시스템입니다.
