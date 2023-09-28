@@ -89,7 +89,9 @@ paths:
 
         ## Equal Query Options
         조건과 일치한 모든 Attendance를 확인할 수 있습니다.
+
         해당 옵션들은 입력된 값과 완전히 일치 되는 경우를 탐색합니다.
+
         "createdBy = 'system'" 옵션을 제공하면, createdBy가 "system"인 event들을 조회합니다.
 
         |param name|type|description|
@@ -122,6 +124,7 @@ paths:
 
         ## Like Query Options
         조건과 유사한 모든 Attendance를 확인할 수 있습니다.
+
         해당 옵션들을 사용하면, 해당 문자열을 포함하는 event를 조회합니다.
 
         예를 들어 "이것은 세미나입니다"라는 index가 있다고 가정합시다.
@@ -136,6 +139,7 @@ paths:
 
         ## Pagination Options
         Attendance 페이지에 대한 데이터 랜더링 값을 설정할 수 있습니다.
+
         해당 인자를 통해 pagination처리를 할 수 있습니다. Sort Option은 아래 파트를 참고하세요.
 
         **주의!** pagination을 설정하지 않더라도, 모든 request는 1000의 Size로 자동으로 pagination처리가 됩니다! 만약 1000건 보다 많은 양의 데이터가 필요하다면, size를 지정해주어야합니다.
@@ -148,6 +152,7 @@ paths:
 
         ## Sort Options
         다음 옵션들을 사용하여 Attendance 데이터를 정렬할 수 있습니다.
+
         Sort Option은 "sort" 인자에 제공해야합니다. 위 옵션들과 다르게 Sort Option은 여러 인자들을 입력해도 됩니다.
 
         sort 인자에 모든 Option들을 지정했다면, 마지막 인자로 Sort 방향을 지정해주여야 합니다. ASC(오름 차순), DESC(내립차순) 2가지 옵션이 있습니다. 만약 옵션을 지정해주지 않았다면, DESC로 동작합니다.
@@ -261,17 +266,23 @@ paths:
                   $ref: '#/definitions/Attendance'
       tags:
       - attendance
-    parameters: []
-  /attendance/add/:
     post:
-      operationId: attendance_add_create
-      summary: 신규 AttendanceCode 추가
-      description: |-
-        ---
+      operationId: attendance_create
+      summary: |2+
+
+        신규 Attendance추가
+
+      description: |2
+
         RBAC - 4(어드민)
 
-        해당 API를 통해 신규 AttendanceCode를 추가할 수 있습니다.
+        해당 API를 통해 신규 Attendance를 추가할 수 있습니다.
       parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Attendance'
       - name: uid
         in: header
         description: 요청을 보내는 유저의 UID 입니다.
@@ -283,15 +294,19 @@ paths:
       responses:
         '201':
           description: ''
+          schema:
+            $ref: '#/definitions/Attendance'
       tags:
       - attendance
     parameters: []
   /attendance/attendanceType/:
     get:
       operationId: attendance_attendanceType_list
-      summary: 출결 종류를 조회할 수 있는 API 입니다.
+      summary: 출결 종류를 조회
       description: |-
         ---
+        RBAC - 1(게스트) 이상
+
         등록되어 있는 모든 AttendanceType를 확인할 수 있습니다.
 
 
@@ -311,7 +326,9 @@ paths:
 
         ## Equal Query Options
         조건과 일치한 모든 AttendanceType를 확인할 수 있습니다.
+
         해당 옵션들은 입력된 값과 완전히 일치 되는 경우를 탐색합니다.
+
         "createdBy = 'system'" 옵션을 제공하면, createdBy가 "system"인 event들을 조회합니다.
 
         |param name|type|description|
@@ -342,6 +359,7 @@ paths:
 
         ## Like Query Options
         조건과 유사한 모든 AttendanceType를 확인할 수 있습니다.
+
         해당 옵션들을 사용하면, 해당 문자열을 포함하는 event를 조회합니다.
 
         예를 들어 "이것은 세미나입니다"라는 index가 있다고 가정합시다.
@@ -357,6 +375,7 @@ paths:
 
         ## Pagination Options
         AttendanceType 페이지에 대한 데이터 랜더링 값을 설정할 수 있습니다.
+
         해당 인자를 통해 pagination처리를 할 수 있습니다. Sort Option은 아래 파트를 참고하세요.
 
         **주의!** pagination을 설정하지 않더라도, 모든 request는 1000의 Size로 자동으로 pagination처리가 됩니다! 만약 1000건 보다 많은 양의 데이터가 필요하다면, size를 지정해주어야합니다.
@@ -369,6 +388,7 @@ paths:
 
         ## Sort Options
         다음 옵션들을 사용하여 AttendanceType 데이터를 정렬할 수 있습니다.
+
         Sort Option은 "sort" 인자에 제공해야합니다. 위 옵션들과 다르게 Sort Option은 여러 인자들을 입력해도 됩니다.
 
         sort 인자에 모든 Option들을 지정했다면, 마지막 인자로 Sort 방향을 지정해주여야 합니다. ASC(오름 차순), DESC(내립차순) 2가지 옵션이 있습니다. 만약 옵션을 지정해주지 않았다면, DESC로 동작합니다.
@@ -471,10 +491,16 @@ paths:
   /attendance/{attendanceId}/:
     get:
       operationId: attendance_read
-      summary: AttendanceCode API
-      description: |-
-        ---
-        출결 코드를 추가하고, 삭제하고, 사용하는 API를 제공합니다.
+      summary: |2+
+
+        단일 Attendance를 조회
+
+      description: |2
+
+        RBAC - 2(수습 회원) 이상
+
+        자신의 정보를 조회할 때는 role이 2(수습 회원)이어도 괜찮습니다.
+        다만, 다른 사람의 정보를 조회할 때는 role이 4(임원진)이어야 합니다.
       parameters:
       - name: uid
         in: header
@@ -493,10 +519,15 @@ paths:
       - attendance
     put:
       operationId: attendance_update
-      summary: AttendanceCode API
-      description: |-
-        ---
-        출결 코드를 추가하고, 삭제하고, 사용하는 API를 제공합니다.
+      summary: |2+
+
+        Attendance를 업데이트
+
+      description: |2
+
+        RBAC - 4(어드민)
+
+        부분 업데이트를 지원합니다.
       parameters:
       - name: data
         in: body
@@ -520,10 +551,13 @@ paths:
       - attendance
     delete:
       operationId: attendance_delete
-      summary: AttendanceCode API
-      description: |-
-        ---
-        출결 코드를 추가하고, 삭제하고, 사용하는 API를 제공합니다.
+      summary: |2+
+
+        Attendance를 제거
+
+      description: |2
+
+        RBAC - 4(어드민)
       parameters:
       - name: uid
         in: header
@@ -549,7 +583,7 @@ paths:
       summary: 다수 Event를 조회
       description: |-
         ---
-        RBAC - 4(어드민)
+        RBAC - 1(게스트) 이상
 
 
 
@@ -568,7 +602,9 @@ paths:
 
         ## Equal Query Options
         조건과 일치한 모든 Event를 확인할 수 있습니다.
+
         해당 옵션들은 입력된 값과 완전히 일치 되는 경우를 탐색합니다.
+
         "createdBy = 'system'" 옵션을 제공하면, createdBy가 "system"인 event들을 조회합니다.
 
         |param name|type|description|
@@ -599,6 +635,7 @@ paths:
 
         ## Like Query Options
         조건과 유사한 모든 Event를 확인할 수 있습니다.
+
         해당 옵션들을 사용하면, 해당 문자열을 포함하는 event를 조회합니다.
 
         예를 들어 "이것은 세미나입니다"라는 index가 있다고 가정합시다.
@@ -614,6 +651,7 @@ paths:
 
         ## Pagination Options
         Event 페이지에 대한 데이터 랜더링 값을 설정할 수 있습니다.
+
         해당 인자를 통해 pagination처리를 할 수 있습니다. Sort Option은 아래 파트를 참고하세요.
 
         **주의!** pagination을 설정하지 않더라도, 모든 request는 1000의 Size로 자동으로 pagination처리가 됩니다! 만약 1000건 보다 많은 양의 데이터가 필요하다면, size를 지정해주어야합니다.
@@ -626,6 +664,7 @@ paths:
 
         ## Sort Options
         다음 옵션들을 사용하여 Event 데이터를 정렬할 수 있습니다.
+
         Sort Option은 "sort" 인자에 제공해야합니다. 위 옵션들과 다르게 Sort Option은 여러 인자들을 입력해도 됩니다.
 
         sort 인자에 모든 Option들을 지정했다면, 마지막 인자로 Sort 방향을 지정해주여야 합니다. ASC(오름 차순), DESC(내립차순) 2가지 옵션이 있습니다. 만약 옵션을 지정해주지 않았다면, DESC로 동작합니다.
@@ -739,17 +778,23 @@ paths:
                   $ref: '#/definitions/Event'
       tags:
       - event
-    parameters: []
-  /event/add/:
     post:
-      operationId: event_add_create
-      summary: 단일 Event를 등록
-      description: |-
-        ---
+      operationId: event_create
+      summary: |2+
+
+        단일 Event를 등록
+
+      description: |2
+
         RBAC - 4(어드민)
 
         해당 API를 통해 신규 Event를 추가할 수 있습니다.
       parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Event'
       - name: uid
         in: header
         description: 요청을 보내는 유저의 UID 입니다.
@@ -761,16 +806,21 @@ paths:
       responses:
         '201':
           description: ''
+          schema:
+            $ref: '#/definitions/Event'
       tags:
       - event
     parameters: []
   /event/{eventId}/:
     get:
       operationId: event_read
-      summary: Event API
-      description: |-
-        ---
-        event 를 추가하고, 삭제하고, 수정하는 API를 제공합니다.
+      summary: |2+
+
+        단일 Event를 조회
+
+      description: |2
+
+        RBAC - 1(Guest) 이상
       parameters:
       - name: uid
         in: header
@@ -789,10 +839,15 @@ paths:
       - event
     put:
       operationId: event_update
-      summary: Event API
-      description: |-
-        ---
-        event 를 추가하고, 삭제하고, 수정하는 API를 제공합니다.
+      summary: |2+
+
+        단일 Event를 업데이트
+
+      description: |2
+
+        RBAC - 4(임원진)
+
+        부분 업데이트를 지원합니다.
       parameters:
       - name: data
         in: body
@@ -816,10 +871,13 @@ paths:
       - event
     delete:
       operationId: event_delete
-      summary: Event API
-      description: |-
-        ---
-        event 를 추가하고, 삭제하고, 수정하는 API를 제공합니다.
+      summary: |2+
+
+        단일 Event를 제거
+
+      description: |2
+
+        RBAC - 4(임원진)
       parameters:
       - name: uid
         in: header
@@ -845,7 +903,7 @@ paths:
       summary: 다수 TimeTable을 조회
       description: |-
         ---
-        Auth - 인증 필요
+        RBAC - 1(게스트) 이상
 
         여러 time table들을 조회, 페이징, 정렬, 필터링을 통해 조회할 수 있습니다.
 
@@ -866,7 +924,9 @@ paths:
 
         ## Equal Query Options
         조건과 일치한 모든 TimeTable를 확인할 수 있습니다.
+
         해당 옵션들은 입력된 값과 완전히 일치 되는 경우를 탐색합니다.
+
         "createdBy = 'system'" 옵션을 제공하면, createdBy가 "system"인 event들을 조회합니다.
 
         |param name|type|description|
@@ -898,6 +958,7 @@ paths:
 
         ## Like Query Options
         조건과 유사한 모든 TimeTable를 확인할 수 있습니다.
+
         해당 옵션들을 사용하면, 해당 문자열을 포함하는 event를 조회합니다.
 
         예를 들어 "이것은 세미나입니다"라는 index가 있다고 가정합시다.
@@ -912,6 +973,7 @@ paths:
 
         ## Pagination Options
         TimeTable 페이지에 대한 데이터 랜더링 값을 설정할 수 있습니다.
+
         해당 인자를 통해 pagination처리를 할 수 있습니다. Sort Option은 아래 파트를 참고하세요.
 
         **주의!** pagination을 설정하지 않더라도, 모든 request는 1000의 Size로 자동으로 pagination처리가 됩니다! 만약 1000건 보다 많은 양의 데이터가 필요하다면, size를 지정해주어야합니다.
@@ -924,6 +986,7 @@ paths:
 
         ## Sort Options
         다음 옵션들을 사용하여 TimeTable 데이터를 정렬할 수 있습니다.
+
         Sort Option은 "sort" 인자에 제공해야합니다. 위 옵션들과 다르게 Sort Option은 여러 인자들을 입력해도 됩니다.
 
         sort 인자에 모든 Option들을 지정했다면, 마지막 인자로 Sort 방향을 지정해주여야 합니다. ASC(오름 차순), DESC(내립차순) 2가지 옵션이 있습니다. 만약 옵션을 지정해주지 않았다면, DESC로 동작합니다.
@@ -1037,17 +1100,23 @@ paths:
                   $ref: '#/definitions/TimeTable'
       tags:
       - timetable
-    parameters: []
-  /timetable/add/:
     post:
-      operationId: timetable_add_create
-      summary: 신규 TimeTable 추가
-      description: |-
-        ---
+      operationId: timetable_create
+      summary: |2+
+
+        신규 TimeTable 추가
+
+      description: |2
+
         RBAC - 4(어드민)
 
         해당 API를 통해 신규 TimeTable을 추가할 수 있습니다.
       parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TimeTable'
       - name: uid
         in: header
         description: 요청을 보내는 유저의 UID 입니다.
@@ -1059,16 +1128,21 @@ paths:
       responses:
         '201':
           description: ''
+          schema:
+            $ref: '#/definitions/TimeTable'
       tags:
       - timetable
     parameters: []
   /timetable/{timetableId}/:
     get:
       operationId: timetable_read
-      summary: TimeTable API
-      description: |-
-        ---
-        TimeTable을 조회하고, 삭제하고, 수정하는 API를 제공합니다.
+      summary: |2+
+
+        단일 TimeTable 조회
+
+      description: |2
+
+        RBAC - 1(Guest) 이상
       parameters:
       - name: uid
         in: header
@@ -1087,10 +1161,15 @@ paths:
       - timetable
     put:
       operationId: timetable_update
-      summary: TimeTable API
-      description: |-
-        ---
-        TimeTable을 조회하고, 삭제하고, 수정하는 API를 제공합니다.
+      summary: |2+
+
+        TimeTable 정보 수정
+
+      description: |2
+
+        RBAC - 4(어드민)
+
+        부분 업데이트를 지원합니다.
       parameters:
       - name: data
         in: body
@@ -1114,10 +1193,13 @@ paths:
       - timetable
     delete:
       operationId: timetable_delete
-      summary: TimeTable API
-      description: |-
-        ---
-        TimeTable을 조회하고, 삭제하고, 수정하는 API를 제공합니다.
+      summary: |2+
+
+        단일 TimeTable 삭제
+
+      description: |2
+
+        RBAC - 4(어드민)
       parameters:
       - name: uid
         in: header
@@ -1140,10 +1222,15 @@ paths:
   /timetable/{timetableId}/attendanceCode/:
     get:
       operationId: timetable_attendanceCode_read
-      summary: AttendanceCode API
-      description: |-
-        ---
-        출결 코드를 추가하고, 삭제하고, 사용하는 API를 제공합니다.
+      summary: |2+
+
+        AttendanceCode 조회
+
+      description: |2
+
+        RBAC - 4(어드민)
+
+        해당 API를 통해 해당하는 time table의 AttendanceCode를 조회할 수 있습니다.
       parameters:
       - name: uid
         in: header
@@ -1162,10 +1249,15 @@ paths:
       - timetable
     post:
       operationId: timetable_attendanceCode_create
-      summary: AttendanceCode API
-      description: |-
-        ---
-        출결 코드를 추가하고, 삭제하고, 사용하는 API를 제공합니다.
+      summary: |2+
+
+        신규 AttendanceCode 추가
+
+      description: |2
+
+        RBAC - 4(어드민)
+
+        해당 API를 통해 신규 AttendanceCode를 추가할 수 있습니다.
       parameters:
       - name: data
         in: body
@@ -1189,10 +1281,15 @@ paths:
       - timetable
     delete:
       operationId: timetable_attendanceCode_delete
-      summary: AttendanceCode API
-      description: |-
-        ---
-        출결 코드를 추가하고, 삭제하고, 사용하는 API를 제공합니다.
+      summary: |2+
+
+        AttendanceCode 삭제
+
+      description: |2
+
+        RBAC - 4(어드민)
+
+        해당 API를 통해 해당하는 time table의 AttendanceCode를 삭제할 수 있습니다.
       parameters:
       - name: uid
         in: header
@@ -1221,21 +1318,17 @@ paths:
         RBAC - 2(수습 회원)
 
         해당 API를 통해 Attendance Code로 출결을 등록할 수 있습니다.
-
-        ## Parameter 설명
-            - timetableId: 출결을 등록할 TimeTable의 ID
       parameters:
-      - name: uid
-        in: header
-        description: 요청을 보내는 유저의 UID 입니다.
-        type: string
-      - name: role_id
-        in: header
-        description: 요청을 보내는 유저의 Role ID입니다.
-        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Attendance'
       responses:
         '201':
           description: ''
+          schema:
+            $ref: '#/definitions/Attendance'
       tags:
       - timetable
     parameters:
@@ -1246,7 +1339,6 @@ paths:
 definitions:
   Attendance:
     required:
-    - modified_by
     - index
     - attendance_type_id
     - member_id
@@ -1263,9 +1355,9 @@ definitions:
         format: date-time
         readOnly: true
       modified_by:
-        title: Modified By
+        title: Modified by
         type: string
-        maxLength: 30
+        readOnly: true
         minLength: 1
       index:
         title: Index
@@ -1332,7 +1424,6 @@ definitions:
     - event_id
     - start_date_time
     - end_date_time
-    - modified_by
     type: object
     properties:
       id:
@@ -1367,9 +1458,9 @@ definitions:
         format: date-time
         readOnly: true
       modified_by:
-        title: Modified By
+        title: Modified by
         type: string
-        maxLength: 30
+        readOnly: true
         minLength: 1
   AttendanceCode:
     required:
@@ -1390,3 +1481,10 @@ definitions:
         type: string
         format: date-time
         x-nullable: true
+tags:
+- name: attendance
+  description: 출결 정보를 조회 및 관리할 수 있는 api 입니다.
+- name: event
+  description: event 를 추가하고, 삭제하고, 수정하는 API를 제공합니다.
+- name: timetable
+  description: TimeTable 및 AttendanceCode을 추가하고, 삭제하고, 수정하는 API를 제공합니다.

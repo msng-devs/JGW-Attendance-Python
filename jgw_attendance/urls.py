@@ -23,6 +23,8 @@ from drf_yasg.views import get_schema_view
 from rest_framework.permissions import AllowAny
 from drf_yasg import openapi
 
+from apps.utils.documentation import CustomOpenAPISchemaGenerator
+
 api_description = """
 # 소개
 해당 API를 사용하여 학회의 행사와 타임테이블을 관리하거나, 출결을 관리할 수 있습니다.
@@ -87,6 +89,7 @@ schema_view_v1 = get_schema_view(
     public=True,
     permission_classes=(AllowAny,),
     patterns=urlpatterns,
+    generator_class=CustomOpenAPISchemaGenerator,
 )
 
 if settings.DEBUG:

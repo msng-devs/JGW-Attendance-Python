@@ -42,21 +42,28 @@ class TimeTableApiTest(TestCase):
             Member.objects.create(
                 id="test_member_uid_123456789012",
                 name="test_admin_name",
-                email="test_admin_email",
+                email="test_admin_email@example.com",
+                role=cls.roles[3],
+                status=True,
+            ),
+            Member.objects.create(
+                id="test_member_uid_987654321098",
+                name="another_admin_name",
+                email="another_admin_email@example.com",
                 role=cls.roles[3],
                 status=True,
             ),
             Member.objects.create(
                 id="test_not_admin_member_123456",
                 name="test_member_name_2",
-                email="test_member_email_2",
+                email="test_member_email_2@example.com",
                 role=cls.roles[2],
                 status=True,
             ),
             Member.objects.create(
                 id="test_probationary_member_123",
                 name="test_member_name_3",
-                email="test_member_email_3",
+                email="test_member_email_3@example.com",
                 role=cls.roles[1],
                 status=True,
             ),
@@ -98,7 +105,7 @@ class TimeTableApiTest(TestCase):
             "index": "Test Index",
         }
         self.timetable_id = TestUtils.create_test_data(
-            self.client, reverse("add_timetable"), self.timetable_data
+            self.client, reverse("timetable_list_create"), self.timetable_data
         )
 
         self.another_timetable_data = {
@@ -109,7 +116,7 @@ class TimeTableApiTest(TestCase):
             "index": "Test Index 2",
         }
         self.another_timetable_id = TestUtils.create_test_data(
-            self.client, reverse("add_timetable"), self.another_timetable_data
+            self.client, reverse("timetable_list_create"), self.another_timetable_data
         )
 
         self.attendance_code = TestUtils.create_test_data(
@@ -121,7 +128,7 @@ class TimeTableApiTest(TestCase):
         )
 
     def test_add_timetable(self):
-        timetable_url = reverse("add_timetable")
+        timetable_url = reverse("timetable_list_create")
 
         # given
         self.client = TestUtils.add_header(
@@ -184,7 +191,7 @@ class TimeTableApiTest(TestCase):
         TestUtils.verify_response_data(response, expected_data)
 
     def test_get_all_timetable(self):
-        timetable_url = reverse("timetable_list")
+        timetable_url = reverse("timetable_list_create")
 
         # given
         self.client = TestUtils.add_header(
@@ -205,7 +212,7 @@ class TimeTableApiTest(TestCase):
         self.assertEqual(len(response_data.get("results")), 2)
 
     def test_get_all_filtered_timetable(self):
-        timetable_url = reverse("timetable_list")
+        timetable_url = reverse("timetable_list_create")
 
         # given
         self.client = TestUtils.add_header(
@@ -261,11 +268,11 @@ class TimeTableApiTest(TestCase):
                 modified_by=self.members[1].id,
             )
 
-        timetable_url = reverse("timetable_list")
+        timetable_url = reverse("timetable_list_create")
 
         # given
         self.client = TestUtils.add_header(
-            self.client, self.test_member_uid, self.test_role_id
+            self.client, "test_member_uid_987654321098", 4
         )
 
         # when
@@ -330,7 +337,7 @@ class TimeTableApiTest(TestCase):
 
         # given
         self.client = TestUtils.add_header(
-            self.client, self.test_member_uid, self.test_role_id
+            self.client, "test_member_uid_987654321098", 4
         )
 
         update_data = {"index": "this is updated test timetable index"}

@@ -43,6 +43,7 @@ class TimeTableSerializer(serializers.ModelSerializer):
     end_date_time = serializers.DateTimeField(
         required=True, error_messages={"required": "end_date_time -> 해당 필드는 필수입니다."}
     )
+    modified_by = serializers.CharField(read_only=True)
 
     def to_internal_value(self, data):
         internal_value = super(TimeTableSerializer, self).to_internal_value(data)
@@ -59,6 +60,7 @@ class TimeTableSerializer(serializers.ModelSerializer):
         return internal_value
 
     def update(self, instance, validated_data):
+        validated_data["modified_by"] = self.context.get("request").uid
         event = validated_data.pop("event", None)
         instance = super().update(instance, validated_data)
         if event:

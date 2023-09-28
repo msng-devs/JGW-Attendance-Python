@@ -39,21 +39,28 @@ class EventApiTest(TestCase):
             Member.objects.create(
                 id="test_member_uid_123456789012",
                 name="test_admin_name",
-                email="test_admin_email",
+                email="test_admin_email@example.com",
+                role=cls.roles[3],
+                status=True,
+            ),
+            Member.objects.create(
+                id="test_member_uid_987654321098",
+                name="another_admin_name",
+                email="another_admin_email@example.com",
                 role=cls.roles[3],
                 status=True,
             ),
             Member.objects.create(
                 id="test_not_admin_member_123456",
                 name="test_member_name_2",
-                email="test_member_email_2",
+                email="test_member_email_2@example.com",
                 role=cls.roles[2],
                 status=True,
             ),
             Member.objects.create(
                 id="test_probationary_member_123",
                 name="test_member_name_3",
-                email="test_member_email_3",
+                email="test_member_email_3@example.com",
                 role=cls.roles[1],
                 status=True,
             ),
@@ -77,7 +84,7 @@ class EventApiTest(TestCase):
             "end_date_time": "2022-08-04T04:16:00Z",
         }
         self.event_id = TestUtils.create_test_data(
-            self.client, reverse("add_event"), self.event_data
+            self.client, reverse("event_list"), self.event_data
         )
 
         self.another_event_data = {
@@ -87,11 +94,11 @@ class EventApiTest(TestCase):
             "end_date_time": "2022-08-04T04:16:00Z",
         }
         TestUtils.create_test_data(
-            self.client, reverse("add_event"), self.another_event_data
+            self.client, reverse("event_list"), self.another_event_data
         )
 
     def test_add_event(self):
-        event_url = reverse("add_event")
+        event_url = reverse("event_list")
 
         # given
         self.client = TestUtils.add_header(
@@ -222,7 +229,7 @@ class EventApiTest(TestCase):
                 "start_date_time": "2022-08-04T04:16:00Z",
                 "end_date_time": "2022-08-04T04:16:00Z",
             }
-            TestUtils.create_test_data(self.client, reverse("add_event"), event_data)
+            TestUtils.create_test_data(self.client, reverse("event_list"), event_data)
 
         # when
         response = self.client.get(
@@ -268,7 +275,7 @@ class EventApiTest(TestCase):
 
         # given
         self.client = TestUtils.add_header(
-            self.client, self.test_member_uid, self.test_role_id
+            self.client, "test_member_uid_987654321098", 4
         )
 
         update_data = {"index": "this is updated test event index"}

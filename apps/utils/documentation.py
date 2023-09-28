@@ -8,6 +8,24 @@
 # --------------------------------------------------------------------------
 # Documentation Methods
 # --------------------------------------------------------------------------
+from drf_yasg.generators import OpenAPISchemaGenerator
+
+
+class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
+    def get_schema(self, request=None, public=False):
+        """Generate a :class:`.Swagger` object with custom tags"""
+
+        swagger = super().get_schema(request, public)
+        swagger.tags = [
+            {"name": "attendance", "description": "출결 정보를 조회 및 관리할 수 있는 api 입니다."},
+            {"name": "event", "description": "event 를 추가하고, 삭제하고, 수정하는 API를 제공합니다."},
+            {
+                "name": "timetable",
+                "description": "TimeTable 및 AttendanceCode을 추가하고, 삭제하고, 수정하는 API를 제공합니다.",
+            },
+        ]
+
+        return swagger
 
 
 def description_query_param():
@@ -32,7 +50,9 @@ def description_equal_query(item_name="item", params=None):
     base_description = f"""\n
 ## Equal Query Options
 조건과 일치한 모든 {item_name}를 확인할 수 있습니다.
+
 해당 옵션들은 입력된 값과 완전히 일치 되는 경우를 탐색합니다.
+
 "createdBy = 'system'" 옵션을 제공하면, createdBy가 "system"인 event들을 조회합니다.\n
 """
 
@@ -79,6 +99,7 @@ def description_like_query(item_name="item", params=None):
     base_description = f"""\n
 ## Like Query Options
 조건과 유사한 모든 {item_name}를 확인할 수 있습니다.
+
 해당 옵션들을 사용하면, 해당 문자열을 포함하는 event를 조회합니다.
 
 예를 들어 "이것은 세미나입니다"라는 index가 있다고 가정합시다.
@@ -102,6 +123,7 @@ def description_pagination(item_name="item", params=None):
     base_description = f"""\n
 ## Pagination Options
 {item_name} 페이지에 대한 데이터 랜더링 값을 설정할 수 있습니다.
+
 해당 인자를 통해 pagination처리를 할 수 있습니다. Sort Option은 아래 파트를 참고하세요.
 
 **주의!** pagination을 설정하지 않더라도, 모든 request는 1000의 Size로 자동으로 pagination처리가 됩니다! \
@@ -124,6 +146,7 @@ def description_sort(item_name="item", params=None):
     base_description = f"""\n
 ## Sort Options
 다음 옵션들을 사용하여 {item_name} 데이터를 정렬할 수 있습니다.
+
 Sort Option은 "sort" 인자에 제공해야합니다. 위 옵션들과 다르게 Sort Option은 여러 인자들을 입력해도 됩니다.
 
 sort 인자에 모든 Option들을 지정했다면, 마지막 인자로 Sort 방향을 지정해주여야 합니다. ASC(오름 차순), DESC(내립차순) 2가지 옵션이 있습니다. \
@@ -152,9 +175,11 @@ sort 인자에 모든 Option들을 지정했다면, 마지막 인자로 Sort 방
 
 # AttendanceType
 def get_attendance_type_doc():
-    base_description = """출결 종류를 조회할 수 있는 API 입니다.
+    base_description = """출결 종류를 조회
 
 ---
+RBAC - 1(게스트) 이상
+
 등록되어 있는 모든 AttendanceType를 확인할 수 있습니다.
 """
 
@@ -381,7 +406,7 @@ def get_event_doc():
     base_description = """다수 Event를 조회
 
 ---
-RBAC - 4(어드민)
+RBAC - 1(게스트) 이상
 """
 
     return (
@@ -491,7 +516,7 @@ def get_timetable_doc():
     base_description = """다수 TimeTable을 조회
 
 ---
-Auth - 인증 필요
+RBAC - 1(게스트) 이상
 
 여러 time table들을 조회, 페이징, 정렬, 필터링을 통해 조회할 수 있습니다.
 """

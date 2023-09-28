@@ -4,14 +4,13 @@ from django.urls import path
 
 urlpatterns = [
     # Create operation
-    path("add/", views.AddTimeTable.as_view(), name="add_timetable"),
     path(
         "<int:timetableId>/attendanceCode/register/",
         views.RegisterAttendanceCode.as_view(),
         name="attendance_code_register",
     ),
-    # Read operations for all timetables
-    path("", views.TimeTableList.as_view(), name="timetable_list"),
+    # Create, Read operations for all timetables
+    path("", views.TimeTableListCreate.as_view(), name="timetable_list_create"),
     # Read, Delete, Update operations for a specific timetable
     path(
         "<int:timetableId>/",

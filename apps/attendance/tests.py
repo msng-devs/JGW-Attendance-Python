@@ -79,7 +79,7 @@ from apps.utils.test_utils import TestUtils
 #         self.test_role_id = 4
 
 #     def test_add_attendance_scheduler(self):
-#         attendance_url = reverse("add_attendance")
+#         attendance_url = reverse("attendance_list_create")
 
 #         # given
 #         self.client = TestUtils.add_header(
@@ -141,21 +141,28 @@ class AttendanceApiTest(TestCase):
             Member.objects.create(
                 id="test_member_uid_123456789012",
                 name="test_admin_name",
-                email="test_admin_email",
+                email="test_admin_email@example.com",
+                role=cls.roles[3],
+                status=True,
+            ),
+            Member.objects.create(
+                id="test_member_uid_987654321098",
+                name="another_admin_name",
+                email="another_admin_email@example.com",
                 role=cls.roles[3],
                 status=True,
             ),
             Member.objects.create(
                 id="test_not_admin_member_123456",
                 name="test_member_name_2",
-                email="test_member_email_2",
+                email="test_member_email_2@example.com",
                 role=cls.roles[2],
                 status=True,
             ),
             Member.objects.create(
                 id="test_probationary_member_123",
                 name="test_member_name_3",
-                email="test_member_email_3",
+                email="test_member_email_3@example.com",
                 role=cls.roles[1],
                 status=True,
             ),
@@ -213,7 +220,7 @@ class AttendanceApiTest(TestCase):
             "index": "this is test attendance",
         }
         self.attendance_id = TestUtils.create_test_data(
-            self.client, reverse("add_attendance"), self.attendance_data
+            self.client, reverse("attendance_list_create"), self.attendance_data
         )
 
         self.attendance_data_not_admin = {
@@ -230,14 +237,18 @@ class AttendanceApiTest(TestCase):
         }
 
         self.another_attendance_id = TestUtils.create_test_data(
-            self.client, reverse("add_attendance"), self.attendance_data_not_admin
+            self.client,
+            reverse("attendance_list_create"),
+            self.attendance_data_not_admin,
         )
         self.another_attendance_id_2 = TestUtils.create_test_data(
-            self.client, reverse("add_attendance"), self.attendance_data_not_admin_2
+            self.client,
+            reverse("attendance_list_create"),
+            self.attendance_data_not_admin_2,
         )
 
     def test_add_attendance(self):
-        attendance_url = reverse("add_attendance")
+        attendance_url = reverse("attendance_list_create")
 
         # given
         self.client = TestUtils.add_header(
@@ -369,7 +380,7 @@ class AttendanceApiTest(TestCase):
         TestUtils.verify_response_data(response, self.attendance_data_not_admin)
 
     def test_get_attendances_self(self):
-        attendance_url = reverse("attendance_list")
+        attendance_url = reverse("attendance_list_create")
         attendance_url += f"?memberID={self.test_member_uid}"
 
         # given
@@ -391,7 +402,7 @@ class AttendanceApiTest(TestCase):
         self.assertEqual(len(response_data.get("results")), 1)
 
     def test_get_all_filtered_attendances(self):
-        attendance_url = reverse("attendance_list")
+        attendance_url = reverse("attendance_list_create")
 
         # given
         self.client = TestUtils.add_header(
@@ -428,7 +439,7 @@ class AttendanceApiTest(TestCase):
         self.assertEqual(response_2.data.get("results")[0].get("time_table_id"), 1)
 
     def test_get_all_paginated_attendances(self):
-        attendance_url = reverse("attendance_list")
+        attendance_url = reverse("attendance_list_create")
 
         # given
         self.client = TestUtils.add_header(
@@ -443,7 +454,7 @@ class AttendanceApiTest(TestCase):
                 "index": f"this is test attendance {i}",
             }
             TestUtils.create_test_data(
-                self.client, reverse("add_attendance"), attendance_data
+                self.client, reverse("attendance_list_create"), attendance_data
             )
 
         # when
@@ -477,7 +488,7 @@ class AttendanceApiTest(TestCase):
         )
 
     def test_get_attendances_not_self(self):
-        attendance_url = reverse("attendance_list")
+        attendance_url = reverse("attendance_list_create")
         attendance_url += "?memberID=test_not_admin_member_123456"
 
         # given
@@ -496,7 +507,7 @@ class AttendanceApiTest(TestCase):
         self.assertIsNotNone(response.json())
 
     def test_get_attendances_auth_error(self):
-        attendance_url = reverse("attendance_list")
+        attendance_url = reverse("attendance_list_create")
         attendance_url += "?memberID=test_not_admin_member_123456"
 
         # given
@@ -515,7 +526,7 @@ class AttendanceApiTest(TestCase):
         self.assertEqual(response_data.get("message"), "해당 정보를 열람할 권한이 없습니다.")
 
     def test_get_attendances_not_admin(self):
-        attendance_url = reverse("attendance_list")
+        attendance_url = reverse("attendance_list_create")
         attendance_url += "?memberID=test_probationary_member_123"
 
         # given
