@@ -1221,7 +1221,7 @@ paths:
       type: string
   /timetable/{timetableId}/attendanceCode/:
     get:
-      operationId: timetable_attendanceCode_read
+      operationId: timetable_attendanceCode_list
       summary: |2+
 
         AttendanceCode 조회
@@ -1263,7 +1263,7 @@ paths:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/AttendanceCode'
+          $ref: '#/definitions/AttendanceCodeAddRequest'
       - name: uid
         in: header
         description: 요청을 보내는 유저의 UID 입니다.
@@ -1323,7 +1323,15 @@ paths:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/Attendance'
+          $ref: '#/definitions/AttendanceCodeRegisterRequest'
+      - name: uid
+        in: header
+        description: 요청을 보내는 유저의 UID 입니다.
+        type: string
+      - name: role_id
+        in: header
+        description: 요청을 보내는 유저의 Role ID입니다.
+        type: string
       responses:
         '201':
           description: ''
@@ -1481,6 +1489,26 @@ definitions:
         type: string
         format: date-time
         x-nullable: true
+  AttendanceCodeAddRequest:
+    required:
+    - exp_sec
+    type: object
+    properties:
+      exp_sec:
+        title: Exp sec
+        type: integer
+        maximum: 2592000
+        minimum: -1
+  AttendanceCodeRegisterRequest:
+    required:
+    - code
+    type: object
+    properties:
+      code:
+        title: Code
+        type: string
+        maxLength: 255
+        minLength: 1
 tags:
 - name: attendance
   description: 출결 정보를 조회 및 관리할 수 있는 api 입니다.
