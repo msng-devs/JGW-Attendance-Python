@@ -67,8 +67,10 @@ class EventApiTest(TestCase):
         ]
 
         cls.attendance_type = [
-            AttendanceType.objects.create(id=1, name="test_attendance_type_1"),
-            AttendanceType.objects.create(id=2, name="test_attendance_type_2"),
+            AttendanceType.objects.create(id=1, name="UNA"),
+            AttendanceType.objects.create(id=2, name="APR"),
+            AttendanceType.objects.create(id=3, name="ABS"),
+            AttendanceType.objects.create(id=4, name="ACK"),
         ]
 
     def setUp(self):

@@ -70,8 +70,10 @@ class TimeTableApiTest(TestCase):
         ]
 
         cls.attendance_type = [
-            AttendanceType.objects.create(id=1, name="test_attendance_type_1"),
-            AttendanceType.objects.create(id=2, name="test_attendance_type_2"),
+            AttendanceType.objects.create(id=1, name="UNA"),
+            AttendanceType.objects.create(id=2, name="APR"),
+            AttendanceType.objects.create(id=3, name="ABS"),
+            AttendanceType.objects.create(id=4, name="ACK"),
         ]
 
         cls.events = [
@@ -406,8 +408,11 @@ class TimeTableApiTest(TestCase):
         )
 
         # then
+        response_data = response.json()
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.json()["index"], "출결 코드를 통해 처리된 출결 정보 입니다.")
+        self.assertEqual(response_data["index"], "출결 코드를 통해 처리된 출결 정보 입니다.")
+        self.assertEqual(response_data["attendance_type_id"], 4)
 
     def test_get_timetable_attendancecode(self):
         timetable_url = reverse(

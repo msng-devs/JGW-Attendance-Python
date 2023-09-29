@@ -169,8 +169,10 @@ class AttendanceApiTest(TestCase):
         ]
 
         cls.attendance_type = [
-            AttendanceType.objects.create(id=1, name="test_attendance_type_1"),
-            AttendanceType.objects.create(id=2, name="test_attendance_type_2"),
+            AttendanceType.objects.create(id=1, name="UNA"),
+            AttendanceType.objects.create(id=2, name="APR"),
+            AttendanceType.objects.create(id=3, name="ABS"),
+            AttendanceType.objects.create(id=4, name="ACK"),
         ]
 
         cls.events = [
@@ -642,7 +644,7 @@ class AttendanceApiTest(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIsNotNone(response_data)
-        self.assertEqual(len(response_data.get("results")), 2)
+        self.assertEqual(len(response_data.get("results")), 4)
 
     @classmethod
     def tearDownClass(cls):
