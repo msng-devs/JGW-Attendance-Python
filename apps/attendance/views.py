@@ -13,12 +13,15 @@ from rest_framework.exceptions import PermissionDenied
 
 from .models import AttendanceType, Attendance
 from .serializers import AttendanceSerializer, AttendanceTypeSerializer
+
+from core.scheduler import send_mail
+from core.permissions import get_auth_header, IsAdminOrSelf, IsProbationaryMember
+
 from apps.common.models import Member
-from apps.utils.permissions import get_auth_header, IsAdminOrSelf, IsProbationaryMember
+
 from apps.utils import decorators
-from apps.utils.paginations import CustomBasePagination
 from apps.utils import filters as filters
-from apps.utils.scheduler import send_mail
+from apps.utils.paginations import CustomBasePagination
 from apps.utils import documentation as docs
 
 logger = logging.getLogger("django")

@@ -5,7 +5,8 @@
 # --------------------------------------------------------------------------
 from apps.attendance.models import AttendanceCode
 from apps.attendance.serializers import AttendanceCodeSerializer
-from apps.utils.exceptions import AlreadyHasCodeError, InvalidAttendanceCodeError
+
+from core.exceptions import AlreadyHasCodeError, InvalidAttendanceCodeError
 
 
 class AttendanceCodeService:

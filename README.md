@@ -31,7 +31,11 @@
 │   ├── common (Django manage.py 명령어 및 기본/공통 모델 정의)
 │   ├── event
 │   ├── timetable
-│   └── utils
+│   └── utils (pagination, filtering, documentations 등 공통 유틸리티 기능 정의)
+├── core
+│   ├── exceptions.py (자람 그룹웨어 서비스 규격에 맞는 예외메시지 형식 정의)
+│   ├── permissions.py
+│   └── scheduler.py (sending email, etc ...)
 ├── docs (static API Documents)
 ├── jgw_attendance
 │   └── settings

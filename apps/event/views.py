@@ -9,11 +9,13 @@ from rest_framework import generics, mixins
 
 from .models import Event
 from .serializers import EventSerializer
-from apps.utils import permissions
+
+from core import permissions
+
 from apps.utils import decorators
-from apps.utils.paginations import CustomBasePagination
-from apps.utils import filters as filters
 from apps.utils import documentation as docs
+from apps.utils import filters as filters
+from apps.utils.paginations import CustomBasePagination
 
 logger = logging.getLogger("django")
 
