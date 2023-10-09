@@ -39,7 +39,7 @@ def description_query_param():
 
 또한 모든 Option들은 And로 동작합니다.
 
-만약 "?memberID=456465456&timeTableID=1"라는 인자가 있다면,\
+예를 들어 Attendance API에서, "?memberID=456465456&timeTableID=1"라는 인자가 있다면,\
 memberID가 "456465456"이고, timeTableID가 1인 Attendance를 찾습니다.
 """
     return description
@@ -53,7 +53,7 @@ def description_equal_query(item_name="item", params=None):
 
 해당 옵션들은 입력된 값과 완전히 일치 되는 경우를 탐색합니다.
 
-"createdBy = 'system'" 옵션을 제공하면, createdBy가 "system"인 event들을 조회합니다.\n
+"createdBy = 'system'" 옵션을 제공하면, createdBy가 "system"인 {item_name}들을 조회합니다.\n
 """
 
     # 표 생성
@@ -100,11 +100,11 @@ def description_like_query(item_name="item", params=None):
 ## Like Query Options
 조건과 유사한 모든 {item_name}를 확인할 수 있습니다.
 
-해당 옵션들을 사용하면, 해당 문자열을 포함하는 event를 조회합니다.
+해당 옵션들을 사용하면, 해당 문자열을 포함하는 {item_name}를 조회합니다.
 
 예를 들어 "이것은 세미나입니다"라는 index가 있다고 가정합시다.
 
-"index" 인자로 "세미나" 이라는 값을 주었다면, index에 "출결"이라는 글자가 들어가는 event들을 찾습니다.\n
+"index" 인자로 "세미나" 이라는 값을 주었다면, index에 "출결"이라는 글자가 들어가는 {item_name}들을 찾습니다.\n
 """
 
     # 표 생성
