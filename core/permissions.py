@@ -107,3 +107,19 @@ class IsProbationaryMember(BasePermission):
         request.role_id = role_id
 
         return True
+
+
+class IsUser(BasePermission):
+    message = "이 작업을 수행할 권한이 없습니다."
+
+    def has_permission(self, request, view):
+        uid, role_id = get_auth_header(request)
+
+        # uid와 role_id가 헤더에 포함되어 있는지 확인
+        if not uid or not role_id:
+            raise PermissionDenied("유저 인증 정보가 없습니다.")
+
+        request.uid = uid
+        request.role_id = role_id
+
+        return True

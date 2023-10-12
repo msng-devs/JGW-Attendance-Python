@@ -121,7 +121,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.AllowAny",
     ],
-    "EXCEPTION_HANDLER": "apps.utils.exceptions.custom_exception_handler",
+    "EXCEPTION_HANDLER": "core.exceptions.custom_exception_handler",
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
 }

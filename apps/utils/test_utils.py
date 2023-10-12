@@ -32,7 +32,7 @@ class TestUtils:
         for key, value in expected_data.items():
             assert response.data[key] == value
 
-    def make_test_pull_socket(host, port):
+    def make_test_pull_socket(self, host, port):
         import zmq
 
         context = zmq.Context()
@@ -42,12 +42,12 @@ class TestUtils:
 
         return socket
 
-    def get_message_from_push_socket(socket):
+    def get_message_from_push_socket(self, socket):
         received_message = socket.recv_json()
         print("Recieved Message From PUSH Socket:", received_message)
         return received_message
 
-    def send_mail(socket):
+    def send_mail(self, socket):
         from django.core.mail import EmailMessage
 
         received_message = socket.recv_json()

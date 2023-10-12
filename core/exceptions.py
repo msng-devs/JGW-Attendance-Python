@@ -28,14 +28,14 @@ class AlreadyHasCodeError(exceptions.APIException):
     # 이미 출석코드가 존재할 경우 발생하는 에러입니다.
     status_code = 400
     default_detail = "해당 시간표에 이미 출석코드가 존재합니다."
-    default_code = 'attendance_code_already_exists'
+    default_code = "attendance_code_already_exists"
 
 
 class InvalidAttendanceCodeError(exceptions.APIException):
     # 출석코드가 유효하지 않을 경우 발생하는 에러입니다.
     status_code = 400
     default_detail = "제공된 출석코드가 유효하지 않습니다."
-    default_code = 'invalid_attendance_code'
+    default_code = "invalid_attendance_code"
 
 
 def _check_error_code(exc):

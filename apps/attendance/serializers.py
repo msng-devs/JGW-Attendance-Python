@@ -40,6 +40,19 @@ class AttendanceSerializer(serializers.ModelSerializer):
     index = serializers.CharField(
         max_length=255, error_messages={"max_length": "index -> 해당 필드는 255자 이하여야합니다."}
     )
+    modified_by = serializers.CharField(read_only=True)
+
+    def create(self, validated_data):
+        validated_data["created_by"] = self.context["request"].uid
+        validated_data["modified_by"] = self.context["request"].uid
+
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data["modified_by"] = self.context["request"].uid
+        instance = super().update(instance, validated_data)
+
+        return instance
 
     class Meta:
         model = Attendance
@@ -78,6 +91,14 @@ class AttendanceCodeAddRequestSerializer(serializers.Serializer):
             "max_value": "exp_sec -> 설정가능한 최대 유효 시간은 2592000(초) 입니다.",
             "min_value": "exp_sec -> 해당 필드에 음수는 사용할 수 없습니다. 만약 영구적인 출결 코드를 발급할려면 (-1)을 입력하세요.",  # noqa E501
         },
+    )
+
+
+class AttendanceCodeRegisterRequestSerializer(serializers.Serializer):
+    code = serializers.CharField(
+        max_length=255,
+        required=True,
+        error_messages={"required": "code -> 해당 필드는 필수입니다."},
     )
 
 

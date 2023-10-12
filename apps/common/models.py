@@ -46,8 +46,12 @@ class BaseEntity(models.Model):
     modified_datetime = models.DateTimeField(
         auto_now=True, verbose_name="Modified Date Time"
     )
-    created_by = models.CharField(max_length=30, verbose_name="Created By")
-    modified_by = models.CharField(max_length=30, verbose_name="Modified By")
+    created_by = models.CharField(
+        max_length=30, verbose_name="Created By", default="system"
+    )
+    modified_by = models.CharField(
+        max_length=30, verbose_name="Modified By", default="system"
+    )
 
     class Meta:
         abstract = True
