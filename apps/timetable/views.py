@@ -197,9 +197,7 @@ class TimeTableDetail(
         return self.destroy(request, *args, **kwargs)
 
 
-class AttendanceCodeDetail(
-    mixins.DestroyModelMixin, generics.GenericAPIView
-):
+class AttendanceCodeDetail(mixins.DestroyModelMixin, generics.GenericAPIView):
     queryset = TimeTable.objects.all()
     permission_classes = [permissions.IsAdminOrSelf]
     lookup_field = "id"
