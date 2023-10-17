@@ -44,33 +44,33 @@ class SchedulerTestCase(TestCase):
             name="Test Event",
             index="Test Index",
             start_date_time=timezone.now() - timedelta(days=2),
-            end_date_time=timezone.now() - timedelta(days=1)
+            end_date_time=timezone.now() - timedelta(days=1),
         )
         self.time_table = TimeTable.objects.create(
             name="Test Time Table",
             index="Test Index",
             event=self.event,
             start_date_time=timezone.now(),
-            end_date_time=timezone.now() + timedelta(days=1)
+            end_date_time=timezone.now() + timedelta(days=1),
         )
         self.outdated_time_table = TimeTable.objects.create(
             name="Test Outdated Time Table",
             index="Test Index",
             event=self.event,
             start_date_time=timezone.now() - timedelta(days=2),
-            end_date_time=timezone.now() - timedelta(days=1)
+            end_date_time=timezone.now() - timedelta(days=1),
         )
         self.attendance = Attendance.objects.create(
             member=self.members[0],
             time_table=self.time_table,
             attendance_type=self.attendance_type[0],
-            index="Test Index"
+            index="Test Index",
         )
         self.outdated_attendance = Attendance.objects.create(
             member=self.members[0],
             time_table=self.outdated_time_table,
             attendance_type=self.attendance_type[1],
-            index="Test Index"
+            index="Test Index",
         )
 
     def test_update_attendance_type_apr(self):

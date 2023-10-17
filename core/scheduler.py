@@ -15,9 +15,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from django_apscheduler.jobstores import DjangoJobStore
 from apscheduler.triggers.cron import CronTrigger
 
-from apps.timetable.models import TimeTable
 from apps.attendance.models import Attendance, AttendanceType
-from apps.event.models import Event
 
 logger = logging.getLogger("django")
 
