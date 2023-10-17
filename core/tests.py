@@ -3,44 +3,85 @@ from django.test import TestCase
 
 from datetime import timedelta
 
+from apps.common.models import Member, Role
 from apps.timetable.models import TimeTable
 from apps.event.models import Event
+from apps.attendance.models import AttendanceType, Attendance
 
-from core.scheduler import delete_expired_timetable
+from core.scheduler import update_attendance_type_apr, update_absent_attendance_info
 
 
 class SchedulerTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.roles = [
+            Role.objects.create(id=1, name="ROLE_GUEST"),
+            Role.objects.create(id=2, name="ROLE_USER0"),
+            Role.objects.create(id=3, name="ROLE_USER1"),
+            Role.objects.create(id=4, name="ROLE_ADMIN"),
+            Role.objects.create(id=5, name="ROLE_DEV"),
+        ]
+
+        cls.attendance_type = [
+            AttendanceType.objects.create(id=1, name="UNA"),
+            AttendanceType.objects.create(id=2, name="APR"),
+            AttendanceType.objects.create(id=3, name="ABS"),
+            AttendanceType.objects.create(id=4, name="ACK"),
+        ]
+
+        cls.members = [
+            Member.objects.create(
+                id="test_probationary_member_123",
+                name="test_member_name_3",
+                email="test_member_email_3@example.com",
+                role=cls.roles[1],
+                status=True,
+            ),
+        ]
 
     def setUp(self):
-        Event.objects.create(
-            id=1,
+        self.event = Event.objects.create(
             name="Test Event",
-            index="Test Event Index",
-            start_date_time=timezone.now() - timedelta(days=10),
-            end_date_time=timezone.now() + timedelta(days=10),
-        )
-        self.timetable_1 = TimeTable.objects.create(
-            name="Expired Timetable",
-            index="Expired Index",
-            start_date_time=timezone.now() - timedelta(days=10),
-            end_date_time=timezone.now() - timedelta(days=5),
-            event_id=1
-        )
-
-        self.timetable_2 = TimeTable.objects.create(
-            name="Active Timetable",
-            index="Active Index",
+            index="Test Index",
             start_date_time=timezone.now() - timedelta(days=2),
-            end_date_time=timezone.now() + timedelta(days=5),
-            event_id=1
+            end_date_time=timezone.now() - timedelta(days=1)
+        )
+        self.time_table = TimeTable.objects.create(
+            name="Test Time Table",
+            index="Test Index",
+            event=self.event,
+            start_date_time=timezone.now(),
+            end_date_time=timezone.now() + timedelta(days=1)
+        )
+        self.outdated_time_table = TimeTable.objects.create(
+            name="Test Outdated Time Table",
+            index="Test Index",
+            event=self.event,
+            start_date_time=timezone.now() - timedelta(days=2),
+            end_date_time=timezone.now() - timedelta(days=1)
+        )
+        self.attendance = Attendance.objects.create(
+            member=self.members[0],
+            time_table=self.time_table,
+            attendance_type=self.attendance_type[0],
+            index="Test Index"
+        )
+        self.outdated_attendance = Attendance.objects.create(
+            member=self.members[0],
+            time_table=self.outdated_time_table,
+            attendance_type=self.attendance_type[1],
+            index="Test Index"
         )
 
-    def test_delete_expired_timetable(self):
-        delete_expired_timetable()
+    def test_update_attendance_type_apr(self):
+        update_attendance_type_apr()
+        self.attendance.refresh_from_db()
+        self.assertEqual("APR", self.attendance.attendance_type.name)
 
-        # 데이터베이스에는 timetable_1이 삭제되어야 하고, timetable_2는 남아 있어야 합니다.
-        self.assertFalse(TimeTable.objects.filter(id=self.timetable_1.id).exists())
-        self.assertTrue(TimeTable.objects.filter(id=self.timetable_2.id).exists())
+    def test_update_absent_attendance_info(self):
+        update_absent_attendance_info()
+        self.outdated_attendance.refresh_from_db()
+        self.assertEqual("ABS", self.outdated_attendance.attendance_type.name)
 
 
 # class AttendanceSchedulerTest(TestCase):

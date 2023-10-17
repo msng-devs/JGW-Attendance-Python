@@ -82,8 +82,8 @@ class EventApiTest(TestCase):
         self.event_data = {
             "name": "test event",
             "index": "this is test event index",
-            "start_date_time": "2022-08-04T04:16:00Z",
-            "end_date_time": "2022-08-04T04:16:00Z",
+            "start_date_time": "2022-08-04 04:16:00",
+            "end_date_time": "2022-08-04 04:16:00",
         }
         self.event_id = TestUtils.create_test_data(
             self.client, reverse("event_list"), self.event_data
@@ -92,8 +92,8 @@ class EventApiTest(TestCase):
         self.another_event_data = {
             "name": "test event 2",
             "index": "this is another test event index",
-            "start_date_time": "2022-08-04T04:16:00Z",
-            "end_date_time": "2022-08-04T04:16:00Z",
+            "start_date_time": "2022-08-04 04:16:00",
+            "end_date_time": "2022-08-04 04:16:00",
         }
         TestUtils.create_test_data(
             self.client, reverse("event_list"), self.another_event_data
@@ -110,8 +110,8 @@ class EventApiTest(TestCase):
         event_data = {
             "name": "Test Event",
             "index": "Test Index",
-            "start_date_time": "2022-08-04T04:16:00Z",
-            "end_date_time": "2022-08-04T04:16:00Z",
+            "start_date_time": "2022-08-04 04:16:00",
+            "end_date_time": "2022-08-04 04:16:00",
         }
 
         # when
@@ -228,8 +228,8 @@ class EventApiTest(TestCase):
             event_data = {
                 "name": f"test event {i}",
                 "index": f"this is test event index {i}",
-                "start_date_time": "2022-08-04T04:16:00Z",
-                "end_date_time": "2022-08-04T04:16:00Z",
+                "start_date_time": "2022-08-04 04:16:00",
+                "end_date_time": "2022-08-04 04:16:00",
             }
             TestUtils.create_test_data(self.client, reverse("event_list"), event_data)
 

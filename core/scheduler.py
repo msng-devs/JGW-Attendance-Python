@@ -1,5 +1,3 @@
-# TODO: 출결 기한이 만료된 경우, ACK로 출석을 하지 않은 유저들의 출석 정보를 ABS로 업데이트.
-# TODO: 기한이 만료된 출석 정보를 업데이트하는 로직 작성.
 # --------------------------------------------------------------------------
 # Scheduling을 위한 모듈입니다.
 #
@@ -11,13 +9,14 @@ import logging
 import datetime
 
 from django.conf import settings
+from django.db.models import Q
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from django_apscheduler.jobstores import DjangoJobStore
 from apscheduler.triggers.cron import CronTrigger
 
 from apps.timetable.models import TimeTable
-from apps.attendance.models import AttendanceType, Attendance
+from apps.attendance.models import Attendance, AttendanceType
 from apps.event.models import Event
 
 logger = logging.getLogger("django")
@@ -54,26 +53,35 @@ def send_mail(to: str, subject: str, template: str, args: str, service_name: str
     zmq_socket.send_json(request)
 
 
-def delete_expired_event():
-    """기한이 만료된 Event를 삭제하는 JOB입니다."""
-    # today = datetime.date.today()
-    pass
-
-
-def delete_expired_timetable():
-    """기한이 만료된 TimeTable을 삭제하는 JOB입니다."""
+def update_attendance_type_apr():
+    """AttendanceType이 UNA인 Attendance의 AttendanceType를 APR로 업데이트하는 JOB입니다."""
     today = datetime.date.today()
 
-    TimeTables = TimeTable.objects.all()
+    # AttendanceType을 UNA에서 APR로 변경
+    una_type = AttendanceType.objects.get(name="UNA")
+    apr_type = AttendanceType.objects.get(name="APR")
 
-    for timetable in TimeTables:
-        if timetable.end_date_time.date() < today:
-            timetable.delete()
+    # start_date_time이 오늘이면서 AttendanceType이 UNA인 Attendance를 찾아서 APR로 업데이트
+    Attendance.objects.filter(
+        time_table__start_date_time__date=today, attendance_type=una_type
+    ).update(attendance_type=apr_type)
 
 
 def update_absent_attendance_info():
     """출결 기한이 만료된 경우, ACK로 출석을 하지 않은 유저들의 출석 정보를 ABS로 업데이트하는 JOB입니다."""
-    pass
+    today = datetime.date.today()
+
+    # AttendanceType을 UNA, APR, ABS로 조회
+    una_type = AttendanceType.objects.get(name="UNA")
+    apr_type = AttendanceType.objects.get(name="APR")
+    abs_type = AttendanceType.objects.get(name="ABS")
+
+    # 생성된 Attendance 중에서(UNA 혹은 APR인) 기한이 지난 TimeTable를 가진 Attendance를 찾아서 ABS로 업데이트
+    expired_attendances = Attendance.objects.filter(
+        Q(attendance_type=una_type) | Q(attendance_type=apr_type),
+        time_table__end_date_time__lt=today,
+    )
+    expired_attendances.update(attendance_type=abs_type)
 
 
 def start():
@@ -84,20 +92,12 @@ def start():
     cron_trigger = CronTrigger(hour=4, minute=0)  # 매일 새벽 4시에 실행
 
     scheduler.add_job(
-        delete_expired_event,
+        update_attendance_type_apr,
         cron_trigger,
-        id="delete_expired_event",
+        id="update_attendance_type_apr",
         replace_existing=True,
     )
-    logger.info("Added job 'delete_expired_event'.")
-
-    scheduler.add_job(
-        delete_expired_timetable,
-        cron_trigger,
-        id="delete_expired_timetable",
-        replace_existing=True,
-    )
-    logger.info("Added job 'delete_expired_timetable'.")
+    logger.info("Added job 'update_attendance_type_apr'.")
 
     scheduler.add_job(
         update_absent_attendance_info,

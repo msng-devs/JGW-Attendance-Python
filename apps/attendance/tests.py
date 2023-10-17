@@ -80,15 +80,15 @@ class AttendanceApiTest(TestCase):
                 id=1,
                 name="test_event_1",
                 index="test event index 1",
-                start_date_time="2022-08-04T04:16:00Z",
-                end_date_time="2022-08-04T04:16:00Z",
+                start_date_time="2022-08-04 04:16:00",
+                end_date_time="2022-08-04 04:16:00",
             ),
             Event.objects.create(
                 id=2,
                 name="test_event_2",
                 index="test event index 2",
-                start_date_time="2022-08-04T04:16:00Z",
-                end_date_time="2022-08-04T04:16:00Z",
+                start_date_time="2022-08-04 04:16:00",
+                end_date_time="2022-08-04 04:16:00",
             ),
         ]
 
@@ -97,15 +97,15 @@ class AttendanceApiTest(TestCase):
                 name="test_timetable_1",
                 index="test timetable index 1",
                 event=cls.events[0],
-                start_date_time="2022-08-04T04:16:00Z",
-                end_date_time="2022-08-04T04:16:00Z",
+                start_date_time="2022-08-04 04:16:00",
+                end_date_time="2022-08-04 04:16:00",
             ),
             TimeTable.objects.create(
                 name="test_timetable_2",
                 index="test timetable index 2",
                 event=cls.events[1],
-                start_date_time="2022-08-04T04:16:00Z",
-                end_date_time="2022-08-04T04:16:00Z",
+                start_date_time="2022-08-04 04:16:00",
+                end_date_time="2022-08-04 04:16:00",
             ),
         ]
 

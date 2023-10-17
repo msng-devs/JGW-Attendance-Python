@@ -6,12 +6,12 @@
 # @author 이준혁(39기) bbbong9@gmail.com
 # --------------------------------------------------------------------------
 import logging
-import pytz
 import json
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from django.urls import reverse
+from django.utils import timezone
 from django.test import TestCase
 
 from rest_framework import status
@@ -80,15 +80,15 @@ class TimeTableApiTest(TestCase):
             Event.objects.create(
                 id=1,
                 name="test_event_name_1",
-                start_date_time="2022-08-04T04:16:00Z",
-                end_date_time="2022-08-04T04:16:00Z",
+                start_date_time="2022-08-04 04:16:00",
+                end_date_time="2022-08-04 04:16:00",
                 index="test_event_index_1",
             ),
             Event.objects.create(
                 id=2,
                 name="test_event_name_2",
-                start_date_time="2022-08-04T04:16:00Z",
-                end_date_time="2022-08-04T04:16:00Z",
+                start_date_time="2022-08-04 04:16:00",
+                end_date_time="2022-08-04 04:16:00",
                 index="test_event_index_2",
             ),
         ]
@@ -101,8 +101,8 @@ class TimeTableApiTest(TestCase):
         # Create a test timetable
         self.timetable_data = {
             "name": "Test Timetable",
-            "start_date_time": "2022-08-04T04:16:00Z",
-            "end_date_time": "2022-08-04T04:16:00Z",
+            "start_date_time": "2022-08-04 04:16:00",
+            "end_date_time": "2022-08-04 04:16:00",
             "event_id": 1,
             "index": "Test Index",
         }
@@ -112,8 +112,8 @@ class TimeTableApiTest(TestCase):
 
         self.another_timetable_data = {
             "name": "Test Timetable 2",
-            "start_date_time": "2022-08-04T04:16:00Z",
-            "end_date_time": "2022-08-04T04:16:00Z",
+            "start_date_time": "2022-08-04 04:16:00",
+            "end_date_time": "2022-08-04 04:16:00",
             "event_id": 2,
             "index": "Test Index 2",
         }
@@ -139,8 +139,8 @@ class TimeTableApiTest(TestCase):
 
         timetable_data = {
             "name": "Test Timetable",
-            "start_date_time": "2022-08-04T04:16:00Z",
-            "end_date_time": "2022-08-04T04:16:00Z",
+            "start_date_time": "2022-08-04 04:16:00",
+            "end_date_time": "2022-08-04 04:16:00",
             "event_id": 1,
             "index": "Test Index",
         }
@@ -155,8 +155,8 @@ class TimeTableApiTest(TestCase):
         # then
         expected_data = {
             "name": "Test Timetable",
-            "start_date_time": "2022-08-04T04:16:00Z",
-            "end_date_time": "2022-08-04T04:16:00Z",
+            "start_date_time": "2022-08-04T04:16:00",
+            "end_date_time": "2022-08-04T04:16:00",
             "event_id": 1,
             "index": "Test Index",
         }
@@ -183,8 +183,8 @@ class TimeTableApiTest(TestCase):
         # then
         expected_data = {
             "name": "Test Timetable",
-            "start_date_time": "2022-08-04T04:16:00Z",
-            "end_date_time": "2022-08-04T04:16:00Z",
+            "start_date_time": "2022-08-04T04:16:00",
+            "end_date_time": "2022-08-04T04:16:00",
             "event_id": 1,
             "index": "Test Index",
         }
@@ -244,8 +244,7 @@ class TimeTableApiTest(TestCase):
         self.assertEqual(len(response_data_2.get("results")), 1)
 
     def test_get_all_paginated_timetable(self):
-        local_timezone = pytz.timezone("Asia/Seoul")
-        start_time = local_timezone.localize(datetime.now())
+        start_time = timezone.now()
         end_time = start_time + timedelta(hours=1)
 
         for i in range(10):
@@ -354,8 +353,8 @@ class TimeTableApiTest(TestCase):
         # then
         expected_data = {
             "name": "Test Timetable",
-            "start_date_time": "2022-08-04T04:16:00Z",
-            "end_date_time": "2022-08-04T04:16:00Z",
+            "start_date_time": "2022-08-04T04:16:00",
+            "end_date_time": "2022-08-04T04:16:00",
             "event_id": 1,
             "index": "this is updated test timetable index",
         }
