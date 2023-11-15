@@ -7,24 +7,24 @@
 #
 # @author 이준혁(39기) bbbong9@gmail.com
 # --------------------------------------------------------------------------
-# from .base import *
+from .base import *
 
-# DEBUG = True
+DEBUG = False
 
-# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = []
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.mysql",
-#         "NAME": "JGWAttendanceDBdev",
-#         "USER": "bnbong",
-#         "PASSWORD": "password",
-#         "HOST": "localhost",
-#         "PORT": "3306",
-#     }
-# }
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": os.getenv("PROD_DB_NAME"),
+        "USER": os.getenv("PROD_DB_USER"),
+        "PASSWORD": os.getenv("PROD_DB_PASSWORD"),
+        "HOST": os.getenv("PROD_DB_HOST"),
+        "PORT": os.getenv("PROD_DB_PORT"),
+    }
+}
 
-# ZMQ_HOST = "your_host_here"
-# ZMQ_PORT = "your_port_here"
+ZMQ_HOST = os.getenv("ZMQ_HOST")
+ZMQ_PORT = os.getenv("ZMQ_PORT")
 
 TESTING_MODE = False

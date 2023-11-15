@@ -25,8 +25,8 @@ DATABASES = {
     }
 }
 
-ZMQ_HOST = os.getenv("ZMQ_HOST")
-ZMQ_PORT = os.getenv("ZMQ_PORT")
+ZMQ_HOST = "127.0.0.1"
+ZMQ_PORT = "5555"
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"

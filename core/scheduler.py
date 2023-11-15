@@ -20,7 +20,7 @@ from apps.attendance.models import Attendance, AttendanceType
 logger = logging.getLogger("django")
 
 
-def send_mail(to: str, subject: str, template: str, args: str, service_name: str):
+def send_mail(to: str, subject: str, template: str, args: dict, service_name: str):
     """zmq를 통해 메일을 발송합니다.
 
     :param to: 메일을 받을 사람의 이메일 주소입니다.
@@ -49,6 +49,7 @@ def send_mail(to: str, subject: str, template: str, args: str, service_name: str
         ensure_ascii=False,
     )
     zmq_socket.send_json(request)
+    logging.info("Send Mail to MailStorm Server.")
 
 
 def update_attendance_type_apr():
