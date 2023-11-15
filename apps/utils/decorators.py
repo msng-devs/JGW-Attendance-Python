@@ -66,9 +66,7 @@ def attendance_code_register_swagger_decorator(func):
     @swagger_auto_schema(
         request_body=AttendanceCodeRegisterRequestSerializer,
         responses={
-            201: openapi.Response(
-                description="", schema=AttendanceSerializer
-            ),
+            201: openapi.Response(description="", schema=AttendanceSerializer),
         },
         manual_parameters=[
             openapi.Parameter(
@@ -95,13 +93,12 @@ def attendance_code_add_swagger_decorator(func):
     from apps.attendance.serializers import (
         AttendanceCodeSerializer,
     )
+
     doc_string = func.__doc__.split("---")
 
     @swagger_auto_schema(
         responses={
-            201: openapi.Response(
-                description="", schema=AttendanceCodeSerializer
-            ),
+            201: openapi.Response(description="", schema=AttendanceCodeSerializer),
         },
         manual_parameters=[
             openapi.Parameter(
