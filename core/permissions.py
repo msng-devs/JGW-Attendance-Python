@@ -22,13 +22,13 @@ VALID_ROLES = [
 
 def get_auth_header(request):
     uid = request.META.get("HTTP_USER_PK", b"")
-    role_id = request.META.get("HTTP_ROLE_PK", b"")
+    role_id = request.META.get("HTTP_ROLE_PK")
 
     if isinstance(uid, text_type) and isinstance(role_id, text_type):
         uid = uid.encode(HTTP_HEADER_ENCODING)
         role_id = role_id.encode(HTTP_HEADER_ENCODING)
 
-    return uid, role_id
+    return uid, int(role_id)
 
 
 def check_permission(uid, role_id, target_member_id=None):

@@ -113,7 +113,7 @@ class AttendanceDetail(
     permission_classes = [IsAdminOrSelf]
     serializer_class = AttendanceSerializer
     lookup_field = "id"
-    lookup_url_kwarg = "attendanceId"
+    lookup_url_kwarg = "attendance_id"
 
     @decorators.methods_swagger_decorator
     def get(self, request, *args, **kwargs):

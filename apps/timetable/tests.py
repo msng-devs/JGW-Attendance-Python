@@ -124,7 +124,7 @@ class TimeTableApiTest(TestCase):
         self.attendance_code = TestUtils.create_test_data(
             self.client,
             reverse(
-                "attendance_code_detail", kwargs={"timetableId": self.timetable_id}
+                "attendance_code_detail", kwargs={"timetable_id": self.timetable_id}
             ),
             {"exp_sec": 30},
         )
@@ -166,7 +166,7 @@ class TimeTableApiTest(TestCase):
 
     def test_get_timetable_by_id(self):
         timetable_url = reverse(
-            "timetable_detail", kwargs={"timetableId": self.timetable_id}
+            "timetable_detail", kwargs={"timetable_id": self.timetable_id}
         )
 
         # given
@@ -313,7 +313,7 @@ class TimeTableApiTest(TestCase):
 
     def test_delete_timetable(self):
         timetable_url = reverse(
-            "timetable_detail", kwargs={"timetableId": self.timetable_id}
+            "timetable_detail", kwargs={"timetable_id": self.timetable_id}
         )
 
         # given
@@ -333,7 +333,7 @@ class TimeTableApiTest(TestCase):
 
     def test_update_timetable(self):
         timetable_url = reverse(
-            "timetable_detail", kwargs={"timetableId": self.timetable_id}
+            "timetable_detail", kwargs={"timetable_id": self.timetable_id}
         )
 
         # given
@@ -364,7 +364,7 @@ class TimeTableApiTest(TestCase):
 
     def test_publish_timetable_attendancecode(self):
         timetable_url = reverse(
-            "attendance_code_detail", kwargs={"timetableId": self.another_timetable_id}
+            "attendance_code_detail", kwargs={"timetable_id": self.another_timetable_id}
         )
 
         # given
@@ -387,7 +387,7 @@ class TimeTableApiTest(TestCase):
 
     def test_register_attendancecode(self):
         timetable_url = reverse(
-            "attendance_code_register", kwargs={"timetableId": self.timetable_id}
+            "attendance_code_register", kwargs={"timetable_id": self.timetable_id}
         )
 
         # given
@@ -415,7 +415,7 @@ class TimeTableApiTest(TestCase):
 
     def test_get_timetable_attendancecode(self):
         timetable_url = reverse(
-            "attendance_code_detail", kwargs={"timetableId": self.timetable_id}
+            "attendance_code_detail", kwargs={"timetable_id": self.timetable_id}
         )
 
         # given
@@ -437,7 +437,7 @@ class TimeTableApiTest(TestCase):
 
     def test_delete_timetable_attendancecode(self):
         timetable_url = reverse(
-            "attendance_code_detail", kwargs={"timetableId": self.timetable_id}
+            "attendance_code_detail", kwargs={"timetable_id": self.timetable_id}
         )
 
         # given

@@ -184,7 +184,7 @@ class AttendanceApiTest(TestCase):
 
     def test_get_attendance_admin_self(self):
         attendance_url = reverse(
-            "attendance_detail", kwargs={"attendanceId": self.attendance_id}
+            "attendance_detail", kwargs={"attendance_id": self.attendance_id}
         )
 
         # given
@@ -211,7 +211,7 @@ class AttendanceApiTest(TestCase):
 
     def test_get_attendance_admin_not_self(self):
         attendance_url = reverse(
-            "attendance_detail", kwargs={"attendanceId": self.another_attendance_id}
+            "attendance_detail", kwargs={"attendance_id": self.another_attendance_id}
         )
 
         # given
@@ -238,7 +238,7 @@ class AttendanceApiTest(TestCase):
 
     def test_get_attendance_not_admin_not_self(self):
         attendance_url = reverse(
-            "attendance_detail", kwargs={"attendanceId": self.attendance_id}
+            "attendance_detail", kwargs={"attendance_id": self.attendance_id}
         )
 
         # given
@@ -263,7 +263,7 @@ class AttendanceApiTest(TestCase):
 
     def test_get_attendance_not_admin_self(self):
         attendance_url = reverse(
-            "attendance_detail", kwargs={"attendanceId": self.another_attendance_id}
+            "attendance_detail", kwargs={"attendance_id": self.another_attendance_id}
         )
 
         # given
@@ -448,7 +448,7 @@ class AttendanceApiTest(TestCase):
 
     def test_delete_attendance(self):
         attendance_url = reverse(
-            "attendance_detail", kwargs={"attendanceId": self.attendance_id}
+            "attendance_detail", kwargs={"attendance_id": self.attendance_id}
         )
 
         # given
@@ -466,7 +466,7 @@ class AttendanceApiTest(TestCase):
 
     def test_delete_attenance_auth_error(self):
         attendance_url = reverse(
-            "attendance_detail", kwargs={"attendanceId": self.attendance_id}
+            "attendance_detail", kwargs={"attendance_id": self.attendance_id}
         )
 
         # given
@@ -483,7 +483,7 @@ class AttendanceApiTest(TestCase):
 
     def test_update_attendance(self):
         attendance_url = reverse(
-            "attendance_detail", kwargs={"attendanceId": self.attendance_id}
+            "attendance_detail", kwargs={"attendance_id": self.attendance_id}
         )
 
         # given
@@ -507,7 +507,7 @@ class AttendanceApiTest(TestCase):
 
     def test_update_attendance_auth_error(self):
         attendance_url = reverse(
-            "attendance_detail", kwargs={"attendanceId": self.attendance_id}
+            "attendance_detail", kwargs={"attendance_id": self.attendance_id}
         )
 
         # given

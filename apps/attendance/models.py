@@ -13,7 +13,7 @@ class AttendanceType(BaseEntity):
     name = models.CharField(max_length=45, unique=True)
 
     class Meta:
-        db_table = "attendance_type"
+        db_table = "ATTENDANCE_TYPE"
         verbose_name = "Attendance Type"
         verbose_name_plural = "Attendance Types"
 
@@ -31,7 +31,7 @@ class Attendance(BaseEntity):
     index = models.TextField()
 
     class Meta:
-        db_table = "attendance"
+        db_table = "ATTENDANCE"
         verbose_name = "Attendance"
         verbose_name_plural = "Attendances"
 

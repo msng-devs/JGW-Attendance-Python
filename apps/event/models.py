@@ -14,7 +14,7 @@ class Event(BaseEntity):
     end_date_time = models.DateTimeField(verbose_name="Event End DateTime")
 
     class Meta:
-        db_table = "event"
+        db_table = "EVENT"
         verbose_name = "Event"
         verbose_name_plural = "Events"
 

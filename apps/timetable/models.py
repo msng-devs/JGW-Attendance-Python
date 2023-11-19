@@ -34,7 +34,7 @@ class TimeTable(BaseEntity):
     objects = TimeTableDateTimesManager()
 
     class Meta:
-        db_table = "time_table"
+        db_table = "TIMETABLE"
         verbose_name = "Time Table"
         verbose_name_plural = "Time Tables"
 
