@@ -63,7 +63,7 @@ class EventDetail(
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     lookup_field = "id"
-    lookup_url_kwarg = "eventId"
+    lookup_url_kwarg = "event_id"
 
     def get_permissions(self):
         if self.request.method == "GET":

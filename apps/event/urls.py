@@ -6,5 +6,5 @@ urlpatterns = [
     # Create, Read operations for all events
     path("", views.EventList.as_view(), name="event_list"),
     # Read, Delete, Update operations for a specific event
-    path("<int:eventId>/", views.EventDetail.as_view(), name="event_detail"),
+    path("<int:event_id>/", views.EventDetail.as_view(), name="event_detail"),
 ]

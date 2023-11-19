@@ -131,7 +131,7 @@ class EventApiTest(TestCase):
         TestUtils.verify_response_data(response, expected_data)
 
     def test_get_event_by_id(self):
-        event_url = reverse("event_detail", kwargs={"eventId": self.event_id})
+        event_url = reverse("event_detail", kwargs={"event_id": self.event_id})
 
         # given
         self.client = TestUtils.add_header(
@@ -253,7 +253,7 @@ class EventApiTest(TestCase):
         )
 
     def test_delete_event(self):
-        event_url = reverse("event_detail", kwargs={"eventId": self.event_id})
+        event_url = reverse("event_detail", kwargs={"event_id": self.event_id})
 
         # given
         self.client = TestUtils.add_header(
@@ -273,7 +273,7 @@ class EventApiTest(TestCase):
         self.assertFalse(Event.objects.filter(id=self.event_id).exists())
 
     def test_update_event(self):
-        event_url = reverse("event_detail", kwargs={"eventId": self.event_id})
+        event_url = reverse("event_detail", kwargs={"event_id": self.event_id})
 
         # given
         self.client = TestUtils.add_header(

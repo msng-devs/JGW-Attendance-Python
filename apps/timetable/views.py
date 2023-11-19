@@ -55,8 +55,8 @@ class RegisterAttendanceCode(generics.CreateAPIView):
 
     @decorators.attendance_code_register_swagger_decorator
     def post(self, request, *args, **kwargs):
-        timetableId = kwargs.get("timetableId")
-        time_table = get_object_or_404(TimeTable, id=timetableId)
+        timetable_id = kwargs.get("timetable_id")
+        time_table = get_object_or_404(TimeTable, id=timetable_id)
 
         code_serializer = AttendanceCodeRegisterRequestSerializer(data=request.data)
         code_serializer.is_valid(raise_exception=True)
@@ -76,7 +76,7 @@ class RegisterAttendanceCode(generics.CreateAPIView):
             "attendance_type_id": register_attendance_type,
             "index": "출결 코드를 통해 처리된 출결 정보 입니다.",
             "member_id": request.uid,
-            "time_table_id": timetableId,
+            "time_table_id": timetable_id,
         }
 
         serializer_context = {
@@ -157,7 +157,7 @@ class TimeTableDetail(
     queryset = TimeTable.objects.all()
     serializer_class = TimeTableSerializer
     lookup_field = "id"
-    lookup_url_kwarg = "timetableId"
+    lookup_url_kwarg = "timetable_id"
 
     def get_permissions(self):
         if self.request.method == "GET":
@@ -201,7 +201,7 @@ class AttendanceCodeDetail(mixins.DestroyModelMixin, generics.GenericAPIView):
     queryset = TimeTable.objects.all()
     permission_classes = [permissions.IsAdminOrSelf]
     lookup_field = "id"
-    lookup_url_kwarg = "timetableId"
+    lookup_url_kwarg = "timetable_id"
 
     def get_serializer_class(self):
         if self.request.method == "GET":
@@ -210,8 +210,8 @@ class AttendanceCodeDetail(mixins.DestroyModelMixin, generics.GenericAPIView):
             return AttendanceCodeAddRequestSerializer
         return super().get_serializer_class()
 
-    def get_time_table(self, timetableId):
-        return get_object_or_404(TimeTable, id=timetableId)
+    def get_time_table(self, timetable_id):
+        return get_object_or_404(TimeTable, id=timetable_id)
 
     @decorators.methods_swagger_decorator
     def get(self, request, *args, **kwargs):
@@ -223,7 +223,7 @@ class AttendanceCodeDetail(mixins.DestroyModelMixin, generics.GenericAPIView):
 
         해당 API를 통해 해당하는 time table의 AttendanceCode를 조회할 수 있습니다.
         """
-        time_table = self.get_time_table(kwargs.get("timetableId"))
+        time_table = self.get_time_table(kwargs.get("timetable_id"))
         attendance_code = AttendanceCodeService.get_code_by_time_table(time_table.id)
 
         if not attendance_code:
@@ -242,7 +242,7 @@ class AttendanceCodeDetail(mixins.DestroyModelMixin, generics.GenericAPIView):
 
         해당 API를 통해 신규 AttendanceCode를 추가할 수 있습니다.
         """
-        time_table = self.get_time_table(kwargs.get("timetableId"))
+        time_table = self.get_time_table(kwargs.get("timetable_id"))
 
         request_serializer = self.get_serializer(data=request.data)
         request_serializer.is_valid(raise_exception=True)
@@ -276,7 +276,7 @@ class AttendanceCodeDetail(mixins.DestroyModelMixin, generics.GenericAPIView):
 
         해당 API를 통해 해당하는 time table의 AttendanceCode를 삭제할 수 있습니다.
         """
-        time_table = self.get_time_table(kwargs.get("timetableId"))
+        time_table = self.get_time_table(kwargs.get("timetable_id"))
         attendance_code = AttendanceCodeService.get_code_by_time_table(time_table.id)
 
         if not attendance_code:
