@@ -72,19 +72,19 @@ attendanceCode는 출결 코드를 의미합니다. 해당 코드를 사용하�
 [apidocs.yaml](.gitbook/assets/apidocs.yaml)
 {% endswagger %}
 
-{% swagger src=".gitbook/assets/apidocs.yaml" path="/attendance/attendanceType/" method="get" %}
+{% swagger src=".gitbook/assets/apidocs.yaml" path="/attendance/attendancetype/" method="get" %}
 [apidocs.yaml](.gitbook/assets/apidocs.yaml)
 {% endswagger %}
 
-{% swagger src=".gitbook/assets/apidocs.yaml" path="/attendance/{attendanceId}/" method="get" %}
+{% swagger src=".gitbook/assets/apidocs.yaml" path="/attendance/{attendance_id}/" method="get" %}
 [apidocs.yaml](.gitbook/assets/apidocs.yaml)
 {% endswagger %}
 
-{% swagger src=".gitbook/assets/apidocs.yaml" path="/attendance/{attendanceId}/" method="put" %}
+{% swagger src=".gitbook/assets/apidocs.yaml" path="/attendance/{attendance_id}/" method="put" %}
 [apidocs.yaml](.gitbook/assets/apidocs.yaml)
 {% endswagger %}
 
-{% swagger src=".gitbook/assets/apidocs.yaml" path="/attendance/{attendanceId}/" method="delete" %}
+{% swagger src=".gitbook/assets/apidocs.yaml" path="/attendance/{attendance_id}/" method="delete" %}
 [apidocs.yaml](.gitbook/assets/apidocs.yaml)
 {% endswagger %}
 
@@ -96,15 +96,15 @@ attendanceCode는 출결 코드를 의미합니다. 해당 코드를 사용하�
 [apidocs.yaml](.gitbook/assets/apidocs.yaml)
 {% endswagger %}
 
-{% swagger src=".gitbook/assets/apidocs.yaml" path="/event/{eventId}/" method="get" %}
+{% swagger src=".gitbook/assets/apidocs.yaml" path="/event/{event_id}/" method="get" %}
 [apidocs.yaml](.gitbook/assets/apidocs.yaml)
 {% endswagger %}
 
-{% swagger src=".gitbook/assets/apidocs.yaml" path="/event/{eventId}/" method="put" %}
+{% swagger src=".gitbook/assets/apidocs.yaml" path="/event/{event_id}/" method="put" %}
 [apidocs.yaml](.gitbook/assets/apidocs.yaml)
 {% endswagger %}
 
-{% swagger src=".gitbook/assets/apidocs.yaml" path="/event/{eventId}/" method="delete" %}
+{% swagger src=".gitbook/assets/apidocs.yaml" path="/event/{event_id}/" method="delete" %}
 [apidocs.yaml](.gitbook/assets/apidocs.yaml)
 {% endswagger %}
 
@@ -116,30 +116,30 @@ attendanceCode는 출결 코드를 의미합니다. 해당 코드를 사용하�
 [apidocs.yaml](.gitbook/assets/apidocs.yaml)
 {% endswagger %}
 
-{% swagger src=".gitbook/assets/apidocs.yaml" path="/timetable/{timetableId}/" method="get" %}
+{% swagger src=".gitbook/assets/apidocs.yaml" path="/timetable/{timetable_id}/" method="get" %}
 [apidocs.yaml](.gitbook/assets/apidocs.yaml)
 {% endswagger %}
 
-{% swagger src=".gitbook/assets/apidocs.yaml" path="/timetable/{timetableId}/" method="put" %}
+{% swagger src=".gitbook/assets/apidocs.yaml" path="/timetable/{timetable_id}/" method="put" %}
 [apidocs.yaml](.gitbook/assets/apidocs.yaml)
 {% endswagger %}
 
-{% swagger src=".gitbook/assets/apidocs.yaml" path="/timetable/{timetableId}/" method="delete" %}
+{% swagger src=".gitbook/assets/apidocs.yaml" path="/timetable/{timetable_id}/" method="delete" %}
 [apidocs.yaml](.gitbook/assets/apidocs.yaml)
 {% endswagger %}
 
-{% swagger src=".gitbook/assets/apidocs.yaml" path="/timetable/{timetableId}/attendanceCode/" method="get" %}
+{% swagger src=".gitbook/assets/apidocs.yaml" path="/timetable/{timetable_id}/attendancecode/" method="get" %}
 [apidocs.yaml](.gitbook/assets/apidocs.yaml)
 {% endswagger %}
 
-{% swagger src=".gitbook/assets/apidocs.yaml" path="/timetable/{timetableId}/attendanceCode/" method="post" %}
+{% swagger src=".gitbook/assets/apidocs.yaml" path="/timetable/{timetable_id}/attendancecode/" method="post" %}
 [apidocs.yaml](.gitbook/assets/apidocs.yaml)
 {% endswagger %}
 
-{% swagger src=".gitbook/assets/apidocs.yaml" path="/timetable/{timetableId}/attendanceCode/" method="delete" %}
+{% swagger src=".gitbook/assets/apidocs.yaml" path="/timetable/{timetable_id}/attendancecode/" method="delete" %}
 [apidocs.yaml](.gitbook/assets/apidocs.yaml)
 {% endswagger %}
 
-{% swagger src=".gitbook/assets/apidocs.yaml" path="/timetable/{timetableId}/attendanceCode/register/" method="post" %}
+{% swagger src=".gitbook/assets/apidocs.yaml" path="/timetable/{timetable_id}/attendancecode/register/" method="post" %}
 [apidocs.yaml](.gitbook/assets/apidocs.yaml)
 {% endswagger %}

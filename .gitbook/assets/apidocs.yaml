@@ -573,7 +573,7 @@ paths:
       tags:
       - attendance
     parameters:
-    - name: attendanceId
+    - name: attendance_id
       in: path
       required: true
       type: string
@@ -893,7 +893,7 @@ paths:
       tags:
       - event
     parameters:
-    - name: eventId
+    - name: event_id
       in: path
       required: true
       type: string
@@ -1215,7 +1215,7 @@ paths:
       tags:
       - timetable
     parameters:
-    - name: timetableId
+    - name: timetable_id
       in: path
       required: true
       type: string
@@ -1305,11 +1305,11 @@ paths:
       tags:
       - timetable
     parameters:
-    - name: timetableId
+    - name: timetable_id
       in: path
       required: true
       type: string
-  /timetable/{timetableId}/attendancecode/register/:
+  /timetable/{timetable_id}/attendancecode/register/:
     post:
       operationId: timetable_attendanceCode_register_create
       summary: AttendanceCode로 출결 등록
@@ -1340,7 +1340,7 @@ paths:
       tags:
       - timetable
     parameters:
-    - name: timetableId
+    - name: timetable_id
       in: path
       required: true
       type: string
