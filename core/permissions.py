@@ -28,7 +28,7 @@ def get_auth_header(request):
         uid = uid.encode(HTTP_HEADER_ENCODING)
         role_id = role_id.encode(HTTP_HEADER_ENCODING)
 
-    return uid, role_id
+    return uid, int(role_id)
 
 
 def check_permission(uid, role_id, target_member_id=None):
