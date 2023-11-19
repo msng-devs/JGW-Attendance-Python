@@ -5,7 +5,7 @@ from django.urls import path
 urlpatterns = [
     # Create operation
     path(
-        "<int:timetable_id>/attendanceCode/register/",
+        "<int:timetable_id>/attendancecode/register/",
         views.RegisterAttendanceCode.as_view(),
         name="attendance_code_register",
     ),
@@ -18,7 +18,7 @@ urlpatterns = [
         name="timetable_detail",
     ),
     path(
-        "<int:timetable_id>/attendanceCode/",
+        "<int:timetable_id>/attendancecode/",
         views.AttendanceCodeDetail.as_view(),
         name="attendance_code_detail",
     ),

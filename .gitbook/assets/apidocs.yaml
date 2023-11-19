@@ -299,7 +299,7 @@ paths:
       tags:
       - attendance
     parameters: []
-  /attendance/attendanceType/:
+  /attendance/attendancetype/:
     get:
       operationId: attendance_attendanceType_list
       summary: 출결 종류를 조회
@@ -488,7 +488,7 @@ paths:
       tags:
       - attendance
     parameters: []
-  /attendance/{attendanceId}/:
+  /attendance/{attendance_id}/:
     get:
       operationId: attendance_read
       summary: |2+
@@ -811,7 +811,7 @@ paths:
       tags:
       - event
     parameters: []
-  /event/{eventId}/:
+  /event/{event_id}/:
     get:
       operationId: event_read
       summary: |2+
@@ -1133,7 +1133,7 @@ paths:
       tags:
       - timetable
     parameters: []
-  /timetable/{timetableId}/:
+  /timetable/{timetable_id}/:
     get:
       operationId: timetable_read
       summary: |2+
@@ -1219,7 +1219,7 @@ paths:
       in: path
       required: true
       type: string
-  /timetable/{timetableId}/attendanceCode/:
+  /timetable/{timetable_id}/attendancecode/:
     get:
       operationId: timetable_attendanceCode_list
       summary: |2+
@@ -1309,7 +1309,7 @@ paths:
       in: path
       required: true
       type: string
-  /timetable/{timetableId}/attendanceCode/register/:
+  /timetable/{timetableId}/attendancecode/register/:
     post:
       operationId: timetable_attendanceCode_register_create
       summary: AttendanceCode로 출결 등록
