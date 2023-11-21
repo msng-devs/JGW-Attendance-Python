@@ -5,18 +5,55 @@
 # --------------------------------------------------------------------------
 from django.db import models
 
-from apps.common.models import BaseEntity
 from apps.event.models import Event
 
 
-class TimeTable(BaseEntity):
-    name = models.CharField(max_length=50, verbose_name="Time Table Name")
-    index = models.TextField(max_length=200, verbose_name="Time Table Index")
-    event = models.ForeignKey(
-        Event, on_delete=models.CASCADE, verbose_name="Related Event"
+class TimeTable(models.Model):
+    id = models.AutoField(primary_key=True, db_column="TIMETABLE_PK")
+    name = models.CharField(
+        max_length=50, db_column="TIMETABLE_NM", verbose_name="Time Table Name"
     )
-    start_date_time = models.DateTimeField(verbose_name="Time Table Start DateTime")
-    end_date_time = models.DateTimeField(verbose_name="Time Table End DateTime")
+    index = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+        db_column="TIMETABLE_INDEX",
+        verbose_name="Time Table Index",
+    )
+    event = models.ForeignKey(
+        Event,
+        on_delete=models.CASCADE,
+        db_column="EVENT_EVENT_PK",
+        verbose_name="Related Event",
+    )
+    start_date_time = models.DateTimeField(
+        db_column="TIMETABLE_START_DTTM", verbose_name="Time Table Start DateTime"
+    )
+    end_date_time = models.DateTimeField(
+        db_column="TIMETABLE_END_DTTM", verbose_name="Time Table End DateTime"
+    )
+    created_by = models.CharField(
+        max_length=30,
+        db_column="TIMETABLE_CREATED_BY",
+        verbose_name="Created By",
+        default="system",
+    )
+    modified_by = models.CharField(
+        max_length=30,
+        db_column="TIMETABLE_MODIFIED_BY",
+        verbose_name="Modified By",
+        default="system",
+    )
+    created_datetime = models.DateTimeField(
+        auto_now_add=True,
+        db_column="TIMETABLE_CREATED_DTTM",
+        verbose_name="Created Date Time",
+    )
+    modified_datetime = models.DateTimeField(
+        auto_now=True,
+        db_column="TIMETABLE_MODIFIED_DTTM",
+        verbose_name="Modified Date Time",
+    )
 
     class TimeTableDateTimesManager(models.Manager):
         def get_max_start_datetime(self):

@@ -37,21 +37,3 @@ class Member(models.Model):
 
     created_date = models.DateTimeField(default=timezone.now)
     modified_date = models.DateTimeField(default=timezone.now)
-
-
-class BaseEntity(models.Model):
-    created_datetime = models.DateTimeField(
-        auto_now_add=True, verbose_name="Created Date Time"
-    )
-    modified_datetime = models.DateTimeField(
-        auto_now=True, verbose_name="Modified Date Time"
-    )
-    created_by = models.CharField(
-        max_length=30, verbose_name="Created By", default="system"
-    )
-    modified_by = models.CharField(
-        max_length=30, verbose_name="Modified By", default="system"
-    )
-
-    class Meta:
-        abstract = True
