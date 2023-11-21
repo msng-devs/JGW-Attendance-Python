@@ -23,6 +23,8 @@ from drf_yasg.views import get_schema_view
 from rest_framework.permissions import AllowAny
 from drf_yasg import openapi
 
+from apps.common.views import ping
+
 from apps.utils.documentation import CustomOpenAPISchemaGenerator
 
 api_description = """
@@ -76,6 +78,7 @@ v1_api_patterns = [
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("attendance/api/v1/", include(v1_api_patterns)),
+    path("attendance/api/v1/ping/", ping)
 ]
 
 schema_view_v1 = get_schema_view(
