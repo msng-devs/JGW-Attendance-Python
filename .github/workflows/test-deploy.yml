@@ -3,8 +3,8 @@ name: JGW-Attendance-Python Jenkins
 on:
   push:
     branches:
-      - main
-      
+      - dev
+
 jobs:
   jenkins:
     name: Jenkins-action
@@ -16,5 +16,5 @@ jobs:
           url: ${{ secrets.JENKINS_URL }}
           user: ${{ secrets.JENKINS_USER }}
           token: ${{ secrets.JENKINS_TOKEN }}
-          job: "hub.attendance"
-          
+          job: "hub.test-attendance"
+
