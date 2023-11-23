@@ -6,6 +6,8 @@
 #
 # @author 이준혁(39기) bbbong9@gmail.com
 # --------------------------------------------------------------------------
+import logging
+
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -22,6 +24,8 @@ from rest_framework.exceptions import (
     Throttled,
 )
 import datetime
+
+logger = logging.getLogger("django")
 
 
 class AlreadyHasCodeError(exceptions.APIException):
@@ -104,6 +108,7 @@ def custom_exception_handler(exc, context):
 
     if response is not None:
         error_code = _check_error_code(exc=exc)
+        request = context["request"]
 
         custom_data = {
             "timestamp": datetime.datetime.now().isoformat(),
@@ -111,8 +116,9 @@ def custom_exception_handler(exc, context):
             "error": response.reason_phrase,
             "code": error_code,
             "message": str(exc),
-            "path": context["request"].path,
+            "path": request.path,
         }
+        logger.warning(f"Error occurred - code : {error_code}, detail : {str(exc)}")
         response.data = custom_data
 
     return response
